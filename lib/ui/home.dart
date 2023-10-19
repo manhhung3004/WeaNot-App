@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/city.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -12,7 +14,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Constants myContants = Constants();
 
-  //initiatilization
   int temperature = 0;
   int maxTemp = 0;
   String weatherSateName = 'Loading..';
@@ -21,24 +22,39 @@ class _HomeState extends State<Home> {
 
   var currentDate = 'Loading..';
   String imageUrl = '';
-  int woeid = 44418; // Địa chỉ mặc định của app
-  String location = 'London'; //Thành phố mặc định
+  int id = 2643743;
+  String location = 'London';
 
-  //chọn thành phố và dữ liệu của thành phố
   var selectedCities = City.getSelectedCities();
-  List<String> cities = ['London']; //Danh sách để chọn thành phố
+  List<String> cities = ['London'];
 
-  List consolidatedWeatherList =
-      []; //Lưu trữ thông tin thời tiết của thành phố khi gọi api
+  List consolidatedWeatherList = [];
 
-  //Gọi api
-  String searchWeatherList =
-      'https://api.openweathermap.org/data/2.5/weather?q=lodon&appid=c6c8f0c895e485477d2629dea429ecf4';
+  String apiKey = 'c6c8f0c895e485477d2629dea429ecf4';
+  String apiUrl =
+      'https://api.openweathermap.org/data/2.5/weather?q=&appid=&units=';
+
+  Future<void> fetchWeatherData(String location) async {
+    var weatherUri = Uri.parse(apiUrl).replace(queryParameters: {
+      'q': location,
+      'appid': apiKey,
+      'units': 'metric',
+    });
+    var weatherResult = await http.get(weatherUri);
+    var result = json.decode(weatherResult.body);
+  }
+
+  @override
+  void initState() {
+    fetchWeatherData(location);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // ignore: prefer_const_constructors
         title: Text('Home Page'),
       ),
     );

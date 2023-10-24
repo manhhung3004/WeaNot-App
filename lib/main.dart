@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return const MaterialApp( //use MaterialApp() widget like this
-      home: Home(), //create new widget class for this 'home' to 
+      home: Home(), //create new widget class for this 'home' to
                    // escape 'No MediaQuery widget found' error
       debugShowCheckedModeBanner: false,
     );
@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
-  Widget build(BuildContext context){ 
+  Widget build(BuildContext context){
     Constants myconstants = Constants();
     Size size = MediaQuery.of(context).size;
 
@@ -43,7 +43,6 @@ class Home extends StatelessWidget {
                 onTap: () {
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Welcome()));
                 },
-                
                 child: Container(
                   height: 58,
                   width: size.width * 0.7,

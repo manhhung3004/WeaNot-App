@@ -17,7 +17,7 @@ class _HomeState extends State<Home> {
 
   int temperature = 0;
   int maxTemp = 0;
-  String weatherSateName = 'Loading..';
+  String weatherStateName = 'Loading..';
   int humidity = 0;
   int windSpeed = 0;
 
@@ -47,21 +47,20 @@ class _HomeState extends State<Home> {
 
     setState(() {
       for (int i = 0; i < 7; i++) {
-        consolidatedWeather.add(consolidatedWeather[
-            i]); //this takes the consolidated weather for the next six days for the location searched
+        consolidatedWeather.add(consolidatedWeather[int.parse("0")][i]); //this takes the consolidated weather for the next six days for the location searched
       }
       //Lấy dữ liệu cụ thể của hôm nay
-      temperature = (result["main"]["temp"]?? 0).round();
-      weatherSateName = result['weather'][0]['main'];
-      humidity = result['main']['humidity'].round();
-      windSpeed = result['wind']['speed'].round();
-      maxTemp = result['main']['temp_max'].round();
+      temperature = (result["list"][int.parse("0")]["main"]["temp"]).round() ?? 0;
+      weatherStateName = (result["list"][int.parse("0")]["weather"][int.parse("0")]["main"]) ?? 0;
+      humidity = (result["list"][int.parse("0")]["main"]["humidity"]).round() ?? 0;
+      windSpeed = (result["list"][int.parse("0")]["wind"]["speed"]).round() ?? 0;
+      maxTemp = (result["list"][int.parse("0")]["main"]['temp_max']).round() ?? 0;
       //Định dạng hiển thị ngày
-      var myDate = DateTime.parse((result['dt']).toString());
+      var myDate = DateTime.parse((result["list"][int.parse("0")]["dt_txt"]).toString());
       currentDate = DateFormat('EEEE, d MMMM').format(myDate);
       //gán giá trị cho image url
-      imageUrl = weatherSateName.replaceAll(' ', '').toLowerCase();
-      consolidatedWeather = result.toSet().toList();
+      imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
+      consolidatedWeather = Set.from(result.values).toList();
     });
   }
 
@@ -87,7 +86,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: myContants.primaryColor,
+        backgroundColor: Colors.white,
         centerTitle: true,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
@@ -171,7 +170,7 @@ class _HomeState extends State<Home> {
                   Positioned(
                     bottom: 30,
                     left: 20,
-                    child: Text(weatherSateName,style: const TextStyle(
+                    child: Text(weatherStateName,style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                     ),)

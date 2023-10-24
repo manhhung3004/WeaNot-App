@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:intl/intl.dart';
-import 'package:dio/dio.dart';
 import 'package:weather_app/widgets/weather_item.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,20 +32,16 @@ class _HomeState extends State<Home> {
 
   List consolidataWeatherList = [];
 
-  String searchlocationUrl = 'https://api.openweathermap.org/data/2.5/weather?q=';
-  String searchWeatherUrl = 'https://api.openweathermap.org/data/2.5/forecast?id=';
-
   // get location into api
     void fetchLocation(String location) async {
-    var searchResult = await http.get(Uri.parse('$searchlocationUrl$location?appid=$keyurl'));
-    var result = json.decode(searchResult.body)[0];
+    http.Response searchResult = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=London?appid=f4caf17f2341a501329e41a567e34b7b'));
+    var result = json.decode(searchResult.body);
     setState(() {
-      id = result["id"];
+    id = result["id"]?? 0;
     });
   }
   void fetchWeatherData() async {
-    var weatherResult =
-        await http.get(Uri.parse('$searchWeatherUrl$id?appid=$keyurl'));
+    http.Response weatherResult = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/forecast?id=$id&appid=$keyurl'));
     var result = json.decode(weatherResult.body);
     var consolidatedWeather = result["list"];
 
@@ -56,7 +51,7 @@ class _HomeState extends State<Home> {
             i]); //this takes the consolidated weather for the next six days for the location searched
       }
       //Lấy dữ liệu cụ thể của hôm nay
-      temperature = (result['main']['temp']).round();
+      temperature = (result["main"]["temp"]?? 0).round();
       weatherSateName = result['weather'][0]['main'];
       humidity = result['main']['humidity'].round();
       windSpeed = result['wind']['speed'].round();
@@ -92,6 +87,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: myContants.primaryColor,
         centerTitle: true,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
@@ -246,9 +242,6 @@ class _HomeState extends State<Home> {
                 var newDate = DateFormat('EEEE').format(parsedDate).substring(0,3);
 
                 return GestureDetector(
-                  onTap: (){
-                    print(index);
-                  },
                   child: Container(
                     padding:  const EdgeInsets.symmetric(vertical: 20),
                     margin: const EdgeInsets.only(right: 20 , bottom: 10 , top: 10),

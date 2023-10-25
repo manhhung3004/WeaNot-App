@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
     var consolidatedWeather = result["list"];
 
     setState(() {
-      for (int i = 0; i < 7; i++) {
+      for (int i = 0; i < 4; i++) {
         consolidatedWeather.add(consolidatedWeather[int.parse("0")][i]); //this takes the consolidated weather for the next six days for the location searched
       }
       //Lấy dữ liệu cụ thể của hôm nay
@@ -206,8 +206,8 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   weatheritem(text: 'Wind',value: windSpeed, unit: 'km/h', imageUrl: 'assets/windspeed.png',),
-                  weatheritem(text: 'Wind',value: humidity, unit: '', imageUrl: 'assets/humidity.png',),
-                  weatheritem(text: 'Wind',value: maxTemp, unit: 'C', imageUrl: 'assets/max-temp.png',)
+                  weatheritem(text: 'Humidity',value: humidity, unit: '', imageUrl: 'assets/humidity.png',),
+                  weatheritem(text: 'Temp',value: maxTemp, unit: 'C', imageUrl: 'assets/max-temp.png',)
                 ],
               ) ,
             ),
@@ -227,6 +227,7 @@ class _HomeState extends State<Home> {
                 ),)
               ],
             ),
+            //Set forecast
             const SizedBox(height: 20,),
             Expanded(child: ListView.builder(
               scrollDirection: Axis.horizontal,

@@ -1,4 +1,3 @@
-// ignore: camel_case_types
 import 'package:flutter/material.dart';
 
 // ignore: camel_case_types

@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
 
   // get location into api
     void fetchLocation(String location) async {
-    http.Response searchResult = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=London?appid=f4caf17f2341a501329e41a567e34b7b'));
+    http.Response searchResult = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=$location&appid=$keyurl'));
     var result = json.decode(searchResult.body);
     setState(() {
     id = result["id"]?? 0;
@@ -46,9 +46,11 @@ class _HomeState extends State<Home> {
     var consolidatedWeather = result["list"];
 
     setState(() {
+    if (consolidatedWeather.isNotEmpty) {
       for (int i = 0; i < 4; i++) {
         consolidatedWeather.add(consolidatedWeather[int.parse("0")][i]); //this takes the consolidated weather for the next six days for the location searched
       }
+    }
       //Lấy dữ liệu cụ thể của hôm nay
       temperature = (result["list"][int.parse("0")]["main"]["temp"]).round() ?? 0;
       weatherStateName = (result["list"][int.parse("0")]["weather"][int.parse("0")]["main"]) ?? 0;
@@ -59,6 +61,7 @@ class _HomeState extends State<Home> {
       var myDate = DateTime.parse((result["list"][int.parse("0")]["dt_txt"]).toString());
       currentDate = DateFormat('EEEE, d MMMM').format(myDate);
       //gán giá trị cho image url
+      consolidataWeatherList = consolidatedWeather;
       imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
       consolidatedWeather = Set.from(result.values).toList();
     });
@@ -149,7 +152,7 @@ class _HomeState extends State<Home> {
               height: 200,
               decoration: BoxDecoration(
                 color: myContants.primaryColor,
-                borderRadius: BorderRadius.circular(.5),
+                borderRadius: BorderRadius.circular(15),
                 boxShadow:[
                   BoxShadow(
                     color: myContants.primaryColor.withOpacity(.5),
@@ -236,8 +239,6 @@ class _HomeState extends State<Home> {
                 String today = DateTime.now().toString().substring(0,10);
                 var selectedDay = consolidataWeatherList[index]['applicable_data'];
                 var futurWeatherName = consolidataWeatherList[index]['weather_state_name'];
-                var weatherUrl = futurWeatherName.replaceAll('','').toLowerCase();
-
                 var parsedDate = DateTime.parse(consolidataWeatherList[index]['applicable_data']);
                 var newDate = DateFormat('EEEE').format(parsedDate).substring(0,3);
 
@@ -246,9 +247,10 @@ class _HomeState extends State<Home> {
                     padding:  const EdgeInsets.symmetric(vertical: 20),
                     margin: const EdgeInsets.only(right: 20 , bottom: 10 , top: 10),
                     width: 80,
+                    height: 20,
                     decoration: BoxDecoration(
                       color: selectedDay == today ? myContants.primaryColor : Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(19)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       boxShadow: [
                         BoxShadow(
                           offset: const Offset(0,1),
@@ -266,7 +268,7 @@ class _HomeState extends State<Home> {
                           fontWeight:  FontWeight.w500
                         ),),
                         // ignore: prefer_interpolation_to_compose_strings
-                        Image.asset('${'assets/'+ weatherUrl}.png', width: 30,),
+                        Image.asset('${'assets/'+ futurWeatherName}.png', width: 30,),
                         Text(newDate,style: TextStyle(
                           fontSize: 17,
                           color: selectedDay == today ? Colors.white: myContants.primaryColor,

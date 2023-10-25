@@ -1,16 +1,17 @@
-# weather_app
+# Weather App
 
-A new Flutter project.
+NT118
+This project is a weather app that provides users with up-to-date weather information for their current location. The app uses the OpenWeatherMap API to get weather data, and it displays the data in a user-friendly interface.
 
-## Getting Started
+Features
+Current weather conditions
+Hourly forecast
+Daily forecast
+Weather alerts
+Location search
 
-This project is a starting point for a Flutter application.
+Technical implementation
+The app is built using Flutter, a cross-platform mobile development framework. The app uses the OpenWeatherMap API to get weather data, and it displays the data using a variety of Flutter widgets.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Conclusion
+This app is a useful tool for anyone who wants to stay up-to-date on the weather. The app is easy to use and provides users with all the information they need to know about the weather #

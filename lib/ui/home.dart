@@ -5,6 +5,7 @@ import 'package:weather_app/models/city.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/widgets/weather_item.dart';
 import 'package:http/http.dart' as http;
+import 'dart:core';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,7 +17,9 @@ class _HomeState extends State<Home> {
   Constants myContants = Constants();
 
   int temperature = 0;
+  int temperatureF= 0;
   int maxTemp = 0;
+  int maxTempF = 0;
   String weatherStateName = 'Loading..';
   int humidity = 0;
   int windSpeed = 0;
@@ -47,19 +50,22 @@ class _HomeState extends State<Home> {
 
     setState(() {
     if (consolidatedWeather.isNotEmpty) {
-      for (int i = 0; i < 4; i++) {
-        consolidatedWeather.add(consolidatedWeather[int.parse("0")][i]); //this takes the consolidated weather for the next six days for the location searched
+      for (int i = 0; i < 40; i++) {
+        consolidatedWeather.add(consolidatedWeather[int.parse("0")][i]); //this takes the consolidated weather for the next 4 days for the location searched
       }
     }
       //Lấy dữ liệu cụ thể của hôm nay
-      temperature = (result["list"][int.parse("0")]["main"]["temp"]).round() ?? 0;
+      temperatureF = (result["list"][int.parse("0")]["main"]["temp"]).round() ?? 0;
       weatherStateName = (result["list"][int.parse("0")]["weather"][int.parse("0")]["main"]) ?? 0;
       humidity = (result["list"][int.parse("0")]["main"]["humidity"]).round() ?? 0;
       windSpeed = (result["list"][int.parse("0")]["wind"]["speed"]).round() ?? 0;
-      maxTemp = (result["list"][int.parse("0")]["main"]['temp_max']).round() ?? 0;
+      maxTempF = (result["list"][int.parse("0")]["main"]['temp_max']).round() ?? 0;
       //Định dạng hiển thị ngày
       var myDate = DateTime.parse((result["list"][int.parse("0")]["dt_txt"]).toString());
       currentDate = DateFormat('EEEE, d MMMM').format(myDate);
+      //Chuyển từ đội K sang độ C
+      temperature =  temperatureF - 273 ;
+      maxTemp = maxTempF - 273;
       //gán giá trị cho image url
       consolidataWeatherList = consolidatedWeather;
       imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
@@ -89,7 +95,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: myContants.secondaryColor,
         centerTitle: true,
         automaticallyImplyLeading: false,
         titleSpacing: 0,
@@ -202,19 +208,19 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            const SizedBox( height: 50,),
+            const SizedBox( height: 20,),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  weatheritem(text: 'Wind',value: windSpeed, unit: 'km/h', imageUrl: 'assets/windspeed.png',),
+                  weatheritem(text: 'Wind Speed',value: windSpeed, unit: 'km/h', imageUrl: 'assets/windspeed.png',),
                   weatheritem(text: 'Humidity',value: humidity, unit: '', imageUrl: 'assets/humidity.png',),
-                  weatheritem(text: 'Temp',value: maxTemp, unit: 'C', imageUrl: 'assets/max-temp.png',)
+                  weatheritem(text: 'Temp Max',value: maxTemp, unit: 'C', imageUrl: 'assets/max-temp.png',)
                 ],
               ) ,
             ),
-            const SizedBox(height: 50,),
+            const SizedBox(height: 30,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -223,7 +229,7 @@ class _HomeState extends State<Home> {
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
                 ),),
-                Text('Next 7 Days',style:  TextStyle(
+                Text('Next 5 Days',style:  TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 24,
                   color: myContants.primaryColor
@@ -231,23 +237,35 @@ class _HomeState extends State<Home> {
               ],
             ),
             //Set forecast
-            const SizedBox(height: 20,),
+            const SizedBox(height: 1,),
             Expanded(child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: consolidataWeatherList.length,
               itemBuilder: (BuildContext context, int index){
+                if(index <= 28){
+                  switch (index) {
+                    case 1:
+                      // Thực thi khối mã khi expression bằng value1
+                      break;
+                    case 2:
+                      // Thực thi khối mã khi expression bằng value2
+                      break;
+                    default:
+                      // Thực thi khối mã khi expression không bằng bất kỳ giá trị nào ở trên
+                  }
+                  index += 8;
                 String today = DateTime.now().toString().substring(0,10);
-                var selectedDay = consolidataWeatherList[index]['applicable_data'];
-                var futurWeatherName = consolidataWeatherList[index]['weather_state_name'];
-                var parsedDate = DateTime.parse(consolidataWeatherList[index]['applicable_data']);
-                var newDate = DateFormat('EEEE').format(parsedDate).substring(0,3);
-
+                var selectedDay = consolidataWeatherList[index]["dt_txt"][int.parse("0")] ?? 0;
+                var futurWeatherName = consolidataWeatherList[index]["weather"][int.parse("0")]["main"] ?? 0;
+                var weatherUrl = futurWeatherName.replaceAll('','').toLowerCase();
+                var parsedDate = DateTime.parse((consolidataWeatherList[index]["dt_txt"]).toString());
+                // ignore: non_constant_identifier_names
+                var SlipStringDate = DateFormat('HH, EEEE').format(parsedDate);
                 return GestureDetector(
                   child: Container(
-                    padding:  const EdgeInsets.symmetric(vertical: 20),
+                    padding:  const EdgeInsets.symmetric(vertical: 1),
                     margin: const EdgeInsets.only(right: 20 , bottom: 10 , top: 10),
-                    width: 80,
-                    height: 20,
+                    width: 100,
                     decoration: BoxDecoration(
                       color: selectedDay == today ? myContants.primaryColor : Colors.white,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -262,14 +280,14 @@ class _HomeState extends State<Home> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("${consolidataWeatherList[index]['the_temo'].round()}C", style: TextStyle(
+                        Text("${(consolidataWeatherList[index]["main"]["temp"]-273).round()}C", style: TextStyle(
                           fontSize: 17,
                           color:  selectedDay == today ? Colors.white : myContants.primaryColor,
                           fontWeight:  FontWeight.w500
                         ),),
                         // ignore: prefer_interpolation_to_compose_strings
-                        Image.asset('${'assets/'+ futurWeatherName}.png', width: 30,),
-                        Text(newDate,style: TextStyle(
+                        Image.asset('${'assets/'+ weatherUrl}.png', width: 30,alignment: Alignment.bottomCenter),
+                        Text(SlipStringDate,style: TextStyle(
                           fontSize: 17,
                           color: selectedDay == today ? Colors.white: myContants.primaryColor,
                           fontWeight: FontWeight.w500,
@@ -278,6 +296,10 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 );
+                }
+                else{
+                  return null;
+                }
               }
             ))
           ],

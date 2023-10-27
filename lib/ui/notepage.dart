@@ -71,7 +71,7 @@ class _NotePageState extends State<NotePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Notes',
                   style: TextStyle(
                       fontSize: 30, color: Color.fromARGB(255, 133, 132, 132)),
@@ -96,29 +96,29 @@ class _NotePageState extends State<NotePage> {
                     ))
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             TextField(
               onChanged: onSearchTextChanged,
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style:const TextStyle(fontSize: 16, color: Colors.white),
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 12),
+                contentPadding:const EdgeInsets.symmetric(vertical: 12),
                 hintText: "Search notes...",
-                hintStyle: TextStyle(color: Color.fromARGB(255, 238, 238, 238)),
-                prefixIcon: const Icon(
+                hintStyle: const TextStyle(color: Color.fromARGB(255, 238, 238, 238)),
+                prefixIcon:const Icon(
                   Icons.search,
                   color: Color.fromARGB(255, 255, 254, 254),
                 ),
-                fillColor: Color.fromARGB(150, 179, 179, 179),
+                fillColor:const Color.fromARGB(150, 179, 179, 179),
                 filled: true,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.transparent),
+                  borderSide: const BorderSide(color: Colors.transparent),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide(color: Colors.transparent),
+                  borderSide:const BorderSide(color: Colors.transparent),
                 ),
               ),
             ),
@@ -187,9 +187,8 @@ class _NotePageState extends State<NotePage> {
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Edited: ' +
-                                DateFormat('dd/MM/yyyy')
-                                    .format(filteredNotes[index].modifiedTime),
+                            'Edited: ${DateFormat('dd/MM/yyyy')
+                                    .format(filteredNotes[index].modifiedTime)}',
                             style: TextStyle(
                               fontSize: 10,
                               fontStyle: FontStyle.italic,
@@ -204,7 +203,7 @@ class _NotePageState extends State<NotePage> {
                               deleteNote(index);
                             }
                           },
-                          icon: Icon(
+                          icon:const Icon(
                             Icons.delete,
                           ),
                         ),

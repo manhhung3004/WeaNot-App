@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp2/ui/home.dart';
+import 'package:weather_app/ui/home.dart';
 
     class My_SU_Button extends StatelessWidget {
       final Function()? onTap;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp2/my_sign_up_button.dart';
-import 'package:weatherapp2/text_fill.dart';
-import 'package:weatherapp2/my_button.dart';
+import 'package:weather_app/my_sign_up_button.dart';
+import 'package:weather_app/text_fill.dart';
+import 'package:weather_app/my_button.dart';
 
 
 class SignUp extends StatefulWidget {

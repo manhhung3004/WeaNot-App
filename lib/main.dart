@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/welcome.dart';
+import 'package:weather_app/ui/notepage.dart';
 
-void main() => runApp( const MyApp()
+void main() => runApp(const MyApp());
 
-);
-
-class MyApp extends StatelessWidget{
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp( //use MaterialApp() widget like this
+    return const MaterialApp(
+      //use MaterialApp() widget like this
       home: Home(), //create new widget class for this 'home' to
-                   // escape 'No MediaQuery widget found' error
+      // escape 'No MediaQuery widget found' error
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     Constants myconstants = Constants();
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container (
+      body: Container(
         width: size.width,
         height: size.height,
         color: myconstants.primaryColor.withOpacity(.5),
@@ -38,13 +36,17 @@ class Home extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-
             children: [
               Image.asset('assets/get-started.png'),
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Welcome()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Welcome()),
+                  );
                 },
                 child: Container(
                   height: 58,
@@ -54,10 +56,38 @@ class Home extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(18)),
                   ),
                   child: const Center(
-                    child: Text('Get Started', style: TextStyle(color: Colors.white , fontSize: 18) )
+                    child: Text(
+                      'Get Started',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
                   ),
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotePage()),
+                  );
+                },
+                child: Container(
+                  height: 58,
+                  width: size.width * 0.7,
+                  decoration: BoxDecoration(
+                    color: myconstants.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(18)),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Write Notes',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -65,4 +95,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-

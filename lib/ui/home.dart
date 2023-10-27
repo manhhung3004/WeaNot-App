@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/ui/detail_page.dart';
 import 'package:weather_app/widgets/weather_item.dart';
 import 'package:http/http.dart' as http;
 import 'dart:core';
@@ -220,7 +221,7 @@ class _HomeState extends State<Home> {
                 ],
               ) ,
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(height: 20,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -262,10 +263,13 @@ class _HomeState extends State<Home> {
                 // ignore: non_constant_identifier_names
                 var SlipStringDate = DateFormat('HH, EEEE').format(parsedDate);
                 return GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(consolidatedWeatherList: consolidataWeatherList , selectedId: index, location: location,)));
+                  },
                   child: Container(
                     padding:  const EdgeInsets.symmetric(vertical: 1),
                     margin: const EdgeInsets.only(right: 20 , bottom: 10 , top: 10),
-                    width: 100,
+                    width: 110,
                     decoration: BoxDecoration(
                       color: selectedDay == today ? myContants.primaryColor : Colors.white,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),

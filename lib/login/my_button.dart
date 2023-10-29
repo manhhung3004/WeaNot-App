@@ -4,14 +4,12 @@ import 'package:weather_app/ui/home.dart';
     class MyButton extends StatelessWidget {
       final Function()? onTap;
       const MyButton({super.key, required this.onTap});
-    
       @override
       Widget build(BuildContext context) {
         return GestureDetector(
           onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>  Home()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Home()));
         },
-          
           child: Container(
             padding: const EdgeInsets.all(25),
             margin: const EdgeInsets.symmetric(horizontal: 25),

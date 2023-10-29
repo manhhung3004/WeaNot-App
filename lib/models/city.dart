@@ -82,6 +82,11 @@ class City{
         city: 'Nairobi',
         country: 'Kenya',
         isDefault: false),
+    City(
+        isSelected: false,
+        city: 'HaNoi',
+        country: 'VietNam',
+        isDefault: false),
   ];
 
   //Get the selected cities

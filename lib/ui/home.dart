@@ -43,13 +43,7 @@ class _HomeState extends State<Home> {
     http.Response weatherResult = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/forecast?id=$id&appid=$keyurl'));
     var result = json.decode(weatherResult.body);
     var consolidatedWeather = result["list"];
-
     setState(() {
-    if (consolidatedWeather.isNotEmpty) {
-      for (int i = 0; i < 40; i++) {
-        consolidatedWeather.add(consolidatedWeather[int.parse("0")][i]); //this takes the consolidated weather for the next 4 days for the location searched
-      }
-    }
       //Lấy dữ liệu cụ thể của hôm nay
       temperatureF = (result["list"][int.parse("0")]["main"]["temp"]).round() ?? 0;
       weatherStateName = (result["list"][int.parse("0")]["weather"][int.parse("0")]["main"]) ?? 0;
@@ -109,23 +103,22 @@ class _HomeState extends State<Home> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset('assets/pin.png',width: 20,),
-                  const SizedBox(width: 4,),
-                  DropdownButton(
+                  const SizedBox(width: 5,),
+                  DropdownButton<String>(
                     value: location,
                     icon: const Icon(Icons.keyboard_arrow_down),
-                    items: cities.map((String location) {
-                        return DropdownMenuItem(
-                          value:  location,
-                          child: Text(location));
-                    }).toList(), onChanged: (String? newValue) {
-                      location = newValue!;
-                      fetchLocation(location);
-                      fetchWeatherData();
+                    items: cities.map((String location) => DropdownMenuItem(value: location, child: Text(location))).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        location = newValue!;
+                        fetchLocation(newValue);
+                        fetchWeatherData();},
+                        );
                       },
-                      )
-                    ],
-                  )
-                ],
+                    ),
+                  ],
+                ),
+              ],
               ),
             )
           ),
@@ -140,7 +133,7 @@ class _HomeState extends State<Home> {
               ),),
             Text(currentDate, style:  const TextStyle(
               color: Colors.grey,
-              fontSize: 16.8
+              fontSize: 17
             ),),
             const SizedBox(
               height: 50,
@@ -166,14 +159,14 @@ class _HomeState extends State<Home> {
                   Positioned(
                     top: -40,
                     left:  20,
-                    child: imageUrl == '' ? const Text(''):Image.asset('assets/$imageUrl.png',width: 150,),
+                    child: imageUrl == '' ? const Text(''):Image.asset('assets/$imageUrl.png',width: 200,),
                   ),
                   Positioned(
                     bottom: 30,
-                    left: 20,
+                    left: 30,
                     child: Text(weatherStateName,style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: 40,
                     ),)
                     ),
                     Positioned(
@@ -212,7 +205,7 @@ class _HomeState extends State<Home> {
                 ],
               ) ,
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -234,25 +227,13 @@ class _HomeState extends State<Home> {
               scrollDirection: Axis.horizontal,
               itemCount: consolidataWeatherList.length,
               itemBuilder: (BuildContext context, int index){
-                if(index <= 28){
-                  switch (index) {
-                    case 1:
-                      // Thực thi khối mã khi expression bằng value1
-                      break;
-                    case 2:
-                      // Thực thi khối mã khi expression bằng value2
-                      break;
-                    default:
-                      // Thực thi khối mã khi expression không bằng bất kỳ giá trị nào ở trên
-                  }
-                  index += 8;
                 String today = DateTime.now().toString().substring(0,10);
                 var selectedDay = consolidataWeatherList[index]["dt_txt"][int.parse("0")] ?? 0;
                 var futurWeatherName = consolidataWeatherList[index]["weather"][int.parse("0")]["main"] ?? 0;
                 var weatherUrl = futurWeatherName.replaceAll('','').toLowerCase();
                 var parsedDate = DateTime.parse((consolidataWeatherList[index]["dt_txt"]).toString());
                 // ignore: non_constant_identifier_names
-                var SlipStringDate = DateFormat('HH, EEEE').format(parsedDate);
+                var SlipStringDate = DateFormat('HH,EEEE').format(parsedDate).substring(0,6);
                 return GestureDetector(
                   onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(consolidatedWeatherList: consolidataWeatherList, selectedId: index, location: location,)));
@@ -260,7 +241,7 @@ class _HomeState extends State<Home> {
                   child: Container(
                     padding:  const EdgeInsets.symmetric(vertical: 1),
                     margin: const EdgeInsets.only(right: 20 , bottom: 10 , top: 10),
-                    width: 120,
+                    width: 80,
                     decoration: BoxDecoration(
                       color: selectedDay == today ? myContants.primaryColor : Colors.white,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -281,7 +262,7 @@ class _HomeState extends State<Home> {
                           fontWeight:  FontWeight.w500
                         ),),
                         // ignore: prefer_interpolation_to_compose_strings
-                        Image.asset('${'assets/'+ weatherUrl}.png', width: 30,alignment: Alignment.bottomCenter),
+                        Image.asset('${'assets/'+ weatherUrl}.png', width: 40,alignment: Alignment.bottomCenter),
                         Text(SlipStringDate,style: TextStyle(
                           fontSize: 17,
                           color: selectedDay == today ? Colors.white: myContants.primaryColor,
@@ -291,10 +272,6 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 );
-                }
-                else{
-                  return null;
-                }
               }
             ))
           ],

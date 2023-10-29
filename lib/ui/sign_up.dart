@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
+<<<<<<< HEAD
 import 'package:weather_app/login/my_button.dart';
 
+=======
+>>>>>>> 5c479281b5ad5021fb562688b9df4cfcc7f48c3a
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

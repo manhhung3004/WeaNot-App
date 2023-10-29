@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/note.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/constants/colors.dart';
@@ -62,8 +63,9 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
+    Constants myConstants = Constants();
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: myConstants.secondaryColor,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(
@@ -74,7 +76,7 @@ class _NotePageState extends State<NotePage> {
                 const Text(
                   'Notes',
                   style: TextStyle(
-                      fontSize: 30, color: Color.fromARGB(255, 133, 132, 132)),
+                      fontSize: 30, color: Colors.white),
                 ),
                 IconButton(
                     onPressed: () {

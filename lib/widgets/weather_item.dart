@@ -30,7 +30,7 @@ class weatheritem extends StatelessWidget {
             color: Color(0xffE0E8FE),
             borderRadius: BorderRadius.all(Radius.circular(15)),
           ) ,
-          child: Image.asset(imageUrl),
+          child: Image.asset(imageUrl,width: 50),
         ),
         const SizedBox(
           height: 8,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/welcome.dart';
 import 'package:weather_app/ui/notepage.dart';
+import 'package:weather_app/calender/calender.dart';
 
 void main() => runApp(const MyApp());
 
@@ -83,6 +84,31 @@ class Home extends StatelessWidget {
                   child: const Center(
                     child: Text(
                       'Write Notes',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Calender()),
+                  );
+                },
+                child: Container(
+                  height: 58,
+                  width: size.width * 0.7,
+                  decoration: BoxDecoration(
+                    color: myconstants.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(18)),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Calender',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),

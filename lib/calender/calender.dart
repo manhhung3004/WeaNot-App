@@ -1,21 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-void main(){
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: MyApp(),
-  ));
-}
-class MyApp extends StatefulWidget {
-  const MyApp ({super.key});
+class Calender extends StatefulWidget {
+  const Calender ({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<Calender> createState() => _CalenderState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _CalenderState extends State<Calender> {
   DateTime today = DateTime.now();
   void _onDaySelected(DateTime day, DateTime focusedDay){
     setState(() {

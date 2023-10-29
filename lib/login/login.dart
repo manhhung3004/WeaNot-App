@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp2/text_fill.dart';
-import 'package:weatherapp2/my_button.dart';
-import 'package:weatherapp2/square.dart';
-import 'package:weatherapp2/ui/sign_up.dart';
+import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/login/my_button.dart';
+import 'package:weather_app/login/square.dart';
+import 'package:weather_app/ui/sign_up.dart';
 
 class LoginPage extends StatelessWidget {
-   LoginPage({super.key});
+  LoginPage({super.key});
   //text editing
-   final usernameController = TextEditingController();
-   final passwordController = TextEditingController();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
    //sign user in
-   void signUserIn(
+  void signUserIn(
 
-       ){
+  ){
 
-   }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,8 +63,8 @@ class LoginPage extends StatelessWidget {
 
                 const SizedBox(height: 10),
                 //forget password
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -82,8 +82,8 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 50),
                 //or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     children: [
                       Expanded(
@@ -93,7 +93,7 @@ class LoginPage extends StatelessWidget {
                           ) ,
                       ),
                       Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
                           'Or continue with',
                           style: TextStyle(color: Colors.grey),
@@ -110,7 +110,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 50),
                 //google sign in
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     //google button
@@ -123,17 +123,16 @@ class LoginPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Do not have an account?',
+                    const Text('Do not have an account?',
                     style: TextStyle(color: Colors.grey),),
                     const SizedBox(width: 4),
                     const Text('Register now',
                       style: TextStyle(
                         color: Colors.blue, fontWeight: FontWeight.bold)
-
                     ),
                     GestureDetector(
                       onTap: (){
-                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  SignUp()));
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  const SignUp()));
                       },
                     ),
 

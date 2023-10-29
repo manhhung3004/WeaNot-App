@@ -62,12 +62,10 @@ class _SignUpState extends State<SignUp> {
                 ),
 
                 const SizedBox(height: 10),
-                My_SU_Button(onTap:
-                signUserIn),
+                My_SU_Button(onTap: signUserIn),
                 const SizedBox(height: 50),
                   ],
                 )
-
             ),
           ),
         );

@@ -14,17 +14,24 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
+
 class _DetailPageState extends State<DetailPage> {
   String imageUrl = '';
   @override
   Widget build(BuildContext context) {
+    widget.consolidatedWeatherList.length = widget.consolidatedWeatherList.length - 42;
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     //Tạo linear grandient
     final Shader linearGradient =
       const LinearGradient(colors: <Color>[Color(0x0ffabcff), Color(0xff9AC6F3)])
           .createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
-    widget.consolidatedWeatherList.length = widget.consolidatedWeatherList.length - 40;
+
+    for(int i =0 ; i < widget.consolidatedWeatherList.length - 42;i ++){
+      print(widget.consolidatedWeatherList[i]);
+      print(i);
+    }
+    print(widget.consolidatedWeatherList.length);
     int selectedIndex = widget.selectedId;
     var weatherStateName = widget.consolidatedWeatherList[selectedIndex]["weather"][int.parse("0")]["main"] ?? 0;
     imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
@@ -225,7 +232,8 @@ class _DetailPageState extends State<DetailPage> {
                         itemCount: widget.consolidatedWeatherList.length,
                         itemBuilder: (BuildContext context, int index) {
                           //dont have any value in here
-                          var futureWeatherName = widget.consolidatedWeatherList[index]["weather"][int.parse("0")]["main"];
+                          print(widget.consolidatedWeatherList[index]["weather"][int.parse("0")]["main"]);
+                          var futureWeatherName = widget.consolidatedWeatherList[index]["weather"][int.parse("0")]["main"] ?? 0;
                           var futureImageURL = futureWeatherName.replaceAll('','').toLowerCase();
                           var Mydate = DateTime.parse(widget.consolidatedWeatherList[index]["dt_txt"]);
                           var CurrentDate = DateFormat('d MMMM,EEEE').format(Mydate);

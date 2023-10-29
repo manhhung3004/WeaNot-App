@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
         required this.hintText,
         required this.obscureText,
       });
-    
       @override
       Widget build(BuildContext context) {
         return  Padding(
@@ -34,4 +33,3 @@ import 'package:flutter/material.dart';
         );
       }
     }
-    

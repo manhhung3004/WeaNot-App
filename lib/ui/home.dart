@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset('assets/pin.png',width: 20,),
+                  Image.asset('assets/pin.png',width: 10,),
                   const SizedBox(width: 5,),
                   DropdownButton<String>(
                     value: location,
@@ -159,14 +159,14 @@ class _HomeState extends State<Home> {
                   Positioned(
                     top: -40,
                     left:  20,
-                    child: imageUrl == '' ? const Text(''):Image.asset('assets/$imageUrl.png',width: 200,),
+                    child: imageUrl == '' ? const Text(''):Image.asset('assets/$imageUrl.png',width: 100,),
                   ),
                   Positioned(
                     bottom: 30,
                     left: 30,
                     child: Text(weatherStateName,style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 40,
+                      fontSize: 0,
                     ),)
                     ),
                     Positioned(

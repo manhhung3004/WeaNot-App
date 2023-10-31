@@ -4,17 +4,17 @@ import 'package:weather_app/login/my_button.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/ui/sign_up.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
-  //text editing
+abstract class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  void signUserIn( ){
+  }
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-   //sign user in
-  void signUserIn(
-
-  ){
-
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,15 +25,12 @@ class LoginPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-
                 // logo
                 const Icon(
                   Icons.lock,
                   size: 100,
                 ),
-
                 const SizedBox(height: 50),
-
                 // welcome back, you've been missed!
                 Text(
                   'Welcome back!',
@@ -42,25 +39,20 @@ class LoginPage extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-
                 const SizedBox(height: 25),
-
                 // username textfield
                 MyTextFields(
                   controller: usernameController,
                   hintText: 'Username',
                   obscureText: false,
                 ),
-
                 const SizedBox(height: 10),
-
                 // password textfield
                 MyTextFields(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-
                 const SizedBox(height: 10),
                 //forget password
                 const Padding(
@@ -135,15 +127,12 @@ class LoginPage extends StatelessWidget {
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  const SignUp()));
                       },
                     ),
-
-
                   ],
                 )
             ],
           ),
         ),
       )
-
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/ui/detail_page.dart';
-import 'package:weather_app/widgets/weather_item.dart';
+import 'package:weather_app/ui/weather_item.dart';
 import 'package:http/http.dart' as http;
 import 'dart:core';
 
@@ -159,15 +159,15 @@ class _HomeState extends State<Home> {
                   Positioned(
                     top: -40,
                     left:  20,
-                    child: imageUrl == '' ? const Text(''):Image.asset('assets/$imageUrl.png',width: 100,),
+                    child: imageUrl == '' ? const Text(''):Image.asset('assets/$imageUrl.png',width: 150,),
                   ),
                   Positioned(
                     bottom: 30,
                     left: 30,
                     child: Text(weatherStateName,style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 0,
-                    ),)
+                      fontSize: 30,
+                      ),)
                     ),
                     Positioned(
                       top: 20,
@@ -178,12 +178,12 @@ class _HomeState extends State<Home> {
                           Padding(
                             padding: const EdgeInsets.only(top: 4.0),
                             child: Text(temperature.toString(), style:  TextStyle(
-                              fontSize: 80,
+                              fontSize:90,
                               fontWeight: FontWeight.bold,
                               foreground: Paint()..shader = linearGradient,
                             ),),),
                             Text('o', style:  TextStyle(
-                              fontSize: 40,
+                              fontSize: 50,
                               fontWeight: FontWeight.bold,
                               foreground: Paint()..shader = linearGradient,
                             ),)

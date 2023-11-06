@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/ui/home.dart';
+import 'package:weather_app/ui/welcome.dart';
 
-class My_SU_Button extends StatelessWidget {
+class button_login extends StatelessWidget {
   final Function()? onTap;
-  const My_SU_Button({super.key, required this.onTap});
+  const button_login({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Home()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
     },
 
       child: Container(

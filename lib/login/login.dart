@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp2/text_fill.dart';
-import 'package:weatherapp2/my_button.dart';
-import 'package:weatherapp2/square.dart';
-import 'package:weatherapp2/ui/sign_up.dart';
+import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/login/my_button.dart';
+import 'package:weather_app/login/square.dart';
+import 'package:weather_app/ui/sign_up.dart';
 
 class LoginPage extends StatelessWidget {
    LoginPage({super.key});

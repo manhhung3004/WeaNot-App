@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/login/login.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/welcome.dart';
 import 'package:weather_app/ui/notepage.dart';
@@ -40,7 +41,7 @@ class Home extends StatelessWidget {
             children: [
               Image.asset('assets/get-started.png'),
               const SizedBox(
-                height: 30,
+                height: 10,
               ),
               GestureDetector(
                 onTap: () {
@@ -58,12 +59,13 @@ class Home extends StatelessWidget {
                   ),
                   child: const Center(
                     child: Text(
-                      'Get Started',
+                      'Good Weather',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
                 ),
               ),
+              // Write Notes
               const SizedBox(
                 height: 10,
               ),
@@ -89,6 +91,8 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
+
+              // Calender
               const SizedBox(
                 height: 10,
               ),
@@ -109,6 +113,33 @@ class Home extends StatelessWidget {
                   child: const Center(
                     child: Text(
                       'Calender',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ),
+                ),
+              ),
+
+             // login
+            const SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: Container(
+                  height: 58,
+                  width: size.width * 0.7,
+                  decoration: BoxDecoration(
+                    color: myconstants.primaryColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(18)),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'login check',
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),

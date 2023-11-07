@@ -46,7 +46,7 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 25),
 
                 // username textfield
-                MyTextFields(
+                MyTextField(
                   controller: usernameController,
                   hintText: 'Username',
                   obscureText: false,
@@ -55,19 +55,17 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 10),
 
                 // password textfield
-                MyTextFields(
+                MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
 
                 const SizedBox(height: 10),
-                My_SU_Button(onTap:
-                signUserIn),
+                button_login(onTap: signUserIn),
                 const SizedBox(height: 50),
                   ],
                 )
-
             ),
           ),
         );

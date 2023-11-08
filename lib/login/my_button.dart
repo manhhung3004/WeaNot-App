@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/ui/home.dart';
 import 'package:weather_app/ui/welcome.dart';
 
 class MyButton extends StatelessWidget {
@@ -25,7 +24,6 @@ class MyButton extends StatelessWidget {
               ),
             )
         ),
-
       ),
     );
   }

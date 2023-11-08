@@ -198,7 +198,7 @@ class _NotePageState extends State<NotePage> {
                             ),
                           ),
                         ),
-                        trailing: Container(
+                        trailing: SizedBox(
                           width: 96,
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -208,7 +208,7 @@ class _NotePageState extends State<NotePage> {
                                   // Gọi hàm chia sẻ khi nút "Share" được nhấn
                                   shareNote(filteredNotes[index]);
                                 },
-                                icon: Icon(Icons.share),
+                                icon: const Icon(Icons.share),
                               ),
                               IconButton(
                                 onPressed: () async {
@@ -217,7 +217,7 @@ class _NotePageState extends State<NotePage> {
                                     deleteNote(index);
                                   }
                                 },
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                               ),
                             ],
                           ),

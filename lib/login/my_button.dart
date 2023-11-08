@@ -11,8 +11,8 @@ class MyButton extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
     },
       child: Container(
-        padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+        margin: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(color: Colors.black,
           borderRadius: BorderRadius.circular(8),
         ),

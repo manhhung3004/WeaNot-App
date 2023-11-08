@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/login/login.dart';
@@ -8,7 +10,15 @@ import 'package:weather_app/calender/calender.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  Platform.isAndroid?
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyBF4SPh7gHVQ9PdJeo8jM3qQYlgRJ4Pl74",
+      appId: "1:80732388498:android:bddff46eb4deaae40dba4b",
+      messagingSenderId: "80732388498",
+      projectId: "weather-app-49c60"
+      ),
+  ): await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -132,7 +142,7 @@ class Home extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
                 child: Container(

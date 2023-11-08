@@ -1,56 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'my_button.dart';
-void main() async
-{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(LoginPage());
-
-}
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-
-
 class _LoginPageState extends State<LoginPage> {
 
   final FirebaseAuthService _auth = FirebaseAuthService();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-
-
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const SizedBox(height: 50),
-
               // logo
               const Icon(
                 Icons.lock,
-                size: 100,
+                size: 70,
               ),
-
-              const SizedBox(height: 50),
-
               // welcome back, you've been missed!
               Text(
                 'Welcome back you\'ve been missed!',
@@ -59,27 +42,18 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 16,
                 ),
               ),
-
-              const SizedBox(height: 25),
-
               // username textfield
               MyTextField(
                 controller: _emailController,
                 hintText: 'Username',
                 obscureText: false,
               ),
-
-              const SizedBox(height: 10),
-
               // password textfield
               MyTextField(
                 controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
               ),
-
-              const SizedBox(height: 10),
-
               // forgot password?
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -93,16 +67,10 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-
-              const SizedBox(height: 25),
-
               // sign in button
               MyButton(
                 onTap: _signIn,
               ),
-
-              const SizedBox(height: 50),
-
               // or continue with
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -130,11 +98,8 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-
-              const SizedBox(height: 50),
-
               // google + apple sign in buttons
-               const Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // google button
@@ -144,9 +109,6 @@ class _LoginPageState extends State<LoginPage> {
                   SquareTile(imagePath: 'assets/apple.png'),
                 ],
               ),
-
-              const SizedBox(height: 50),
-
               // not a member? register now
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -171,22 +133,13 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
   void _signIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
     User? user = await _auth.signInWithEmailAndPassword(email, password);
     if(user != null){
-      print("User is succesfully Sign-In");
+      // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, "/Home");
-    }else {
-      print("Error !!");
-    }
   }
+}
 }

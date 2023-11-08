@@ -15,8 +15,8 @@ class Note {
 List<Note> sampleNotes = [
   Note(
     id: 0,
-    title: 'Địa điểm du lịch',
-    content: '1. Lẩu cá đuối\n3. Kẹp 3 lên Đà Lạt\n4. Đi báo ở Dĩ An',
+    title: 'Địa điểm du lịch tại Đà Lạt',
+    content: '1. Dinh Bảo Đại\n2. Hồ Tuyền Lâm\n3. Quảng trường Lâm Viên',
     modifiedTime: DateTime(2023, 2, 1, 12, 34),
   ),
   Note(

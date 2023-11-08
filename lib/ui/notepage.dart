@@ -5,7 +5,8 @@ import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/note.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/constants/colors.dart';
-import 'package:weather_app/screen/edit.dart';
+import 'package:weather_app/screen/editnote.dart';
+import 'package:share/share.dart';
 
 class NotePage extends StatefulWidget {
   const NotePage({Key? key}) : super(key: key);
@@ -75,8 +76,7 @@ class _NotePageState extends State<NotePage> {
               children: [
                 const Text(
                   'Notes',
-                  style: TextStyle(
-                      fontSize: 30, color: Colors.white),
+                  style: TextStyle(fontSize: 30, color: Colors.white),
                 ),
                 IconButton(
                     onPressed: () {
@@ -103,16 +103,17 @@ class _NotePageState extends State<NotePage> {
             ),
             TextField(
               onChanged: onSearchTextChanged,
-              style:const TextStyle(fontSize: 16, color: Colors.white),
+              style: const TextStyle(fontSize: 16, color: Colors.white),
               decoration: InputDecoration(
-                contentPadding:const EdgeInsets.symmetric(vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 hintText: "Search notes...",
-                hintStyle: const TextStyle(color: Color.fromARGB(255, 238, 238, 238)),
-                prefixIcon:const Icon(
+                hintStyle:
+                    const TextStyle(color: Color.fromARGB(255, 238, 238, 238)),
+                prefixIcon: const Icon(
                   Icons.search,
                   color: Color.fromARGB(255, 255, 254, 254),
                 ),
-                fillColor:const Color.fromARGB(150, 179, 179, 179),
+                fillColor: const Color.fromARGB(150, 179, 179, 179),
                 filled: true,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -120,7 +121,7 @@ class _NotePageState extends State<NotePage> {
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide:const BorderSide(color: Colors.transparent),
+                  borderSide: const BorderSide(color: Colors.transparent),
                 ),
               ),
             ),
@@ -189,8 +190,7 @@ class _NotePageState extends State<NotePage> {
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Edited: ${DateFormat('dd/MM/yyyy')
-                                    .format(filteredNotes[index].modifiedTime)}',
+                            'Edited: ${DateFormat('dd/MM/yyyy').format(filteredNotes[index].modifiedTime)}',
                             style: TextStyle(
                               fontSize: 10,
                               fontStyle: FontStyle.italic,
@@ -198,15 +198,28 @@ class _NotePageState extends State<NotePage> {
                             ),
                           ),
                         ),
-                        trailing: IconButton(
-                          onPressed: () async {
-                            final result = await confirmDialog(context);
-                            if (result != null && result) {
-                              deleteNote(index);
-                            }
-                          },
-                          icon:const Icon(
-                            Icons.delete,
+                        trailing: Container(
+                          width: 96,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  // Gọi hàm chia sẻ khi nút "Share" được nhấn
+                                  shareNote(filteredNotes[index]);
+                                },
+                                icon: Icon(Icons.share),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  final result = await confirmDialog(context);
+                                  if (result != null && result) {
+                                    deleteNote(index);
+                                  }
+                                },
+                                icon: Icon(Icons.delete),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -247,6 +260,11 @@ class _NotePageState extends State<NotePage> {
       ),
     );
   }
+}
+
+void shareNote(Note note) {
+  String text = '${note.title}\n\n${note.content}';
+  Share.share(text);
 }
 
 Future<dynamic> confirmDialog(BuildContext context) {

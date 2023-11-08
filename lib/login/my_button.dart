@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/ui/home.dart';
 import 'package:weather_app/ui/welcome.dart';
 
 class MyButton extends StatelessWidget {
@@ -12,8 +11,8 @@ class MyButton extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
     },
       child: Container(
-        padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+        margin: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(color: Colors.black,
           borderRadius: BorderRadius.circular(8),
         ),
@@ -25,7 +24,6 @@ class MyButton extends StatelessWidget {
               ),
             )
         ),
-
       ),
     );
   }

@@ -1,17 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'my_button.dart';
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+class _LoginPageState extends State<LoginPage> {
 
-  // text editing controllers
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  // sign user in method
-  void signUserIn() {}
-
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,18 +27,13 @@ class LoginPage extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const SizedBox(height: 50),
-
               // logo
               const Icon(
                 Icons.lock,
-                size: 100,
+                size: 70,
               ),
-
-              const SizedBox(height: 50),
-
               // welcome back, you've been missed!
               Text(
                 'Welcome back you\'ve been missed!',
@@ -39,27 +42,18 @@ class LoginPage extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
-
-              const SizedBox(height: 25),
-
               // username textfield
               MyTextField(
-                controller: usernameController,
+                controller: _emailController,
                 hintText: 'Username',
                 obscureText: false,
               ),
-
-              const SizedBox(height: 10),
-
               // password textfield
               MyTextField(
-                controller: passwordController,
+                controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
               ),
-
-              const SizedBox(height: 10),
-
               // forgot password?
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -73,16 +67,10 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-
-              const SizedBox(height: 25),
-
               // sign in button
               MyButton(
-                onTap: signUserIn,
+                onTap: _signIn,
               ),
-
-              const SizedBox(height: 50),
-
               // or continue with
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -110,11 +98,8 @@ class LoginPage extends StatelessWidget {
                   ],
                 ),
               ),
-
-              const SizedBox(height: 50),
-
               // google + apple sign in buttons
-               const Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // google button
@@ -124,9 +109,6 @@ class LoginPage extends StatelessWidget {
                   SquareTile(imagePath: 'assets/apple.png'),
                 ],
               ),
-
-              const SizedBox(height: 50),
-
               // not a member? register now
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -151,4 +133,13 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+  void _signIn() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+    if(user != null){
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, "/Home");
+  }
+}
 }

@@ -1,18 +1,29 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'my_button.dart';
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
 
-  // text editing controllers
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
 
-  // sign user in method
-  void signUserIn() {}
+class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -44,7 +55,7 @@ class LoginPage extends StatelessWidget {
 
               // username textfield
               MyTextField(
-                controller: usernameController,
+                controller: _emailController,
                 hintText: 'Username',
                 obscureText: false,
               ),
@@ -53,7 +64,7 @@ class LoginPage extends StatelessWidget {
 
               // password textfield
               MyTextField(
-                controller: passwordController,
+                controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
               ),
@@ -78,7 +89,7 @@ class LoginPage extends StatelessWidget {
 
               // sign in button
               MyButton(
-                onTap: signUserIn,
+                onTap: _signIn,
               ),
 
               const SizedBox(height: 50),
@@ -150,5 +161,23 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+  void _signIn() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+    if(user != null){
+      print("User is succesfully Sign-In");
+      Navigator.pushNamed(context, "/Home");
+    }else {
+      print("Error !!");
+    }
   }
 }

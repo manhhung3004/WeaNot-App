@@ -275,8 +275,8 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    // ignore: duplicate_ignore
                                     children: [
-                                      // ignore: prefer_interpolation_to_compose_strings
                                       Image.asset('${'assets/' + futureImageURL}.png', width: 30,),
                                       Text(widget.consolidatedWeatherList[index]["weather"][int.parse("0")]["main"]),
                                     ],

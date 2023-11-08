@@ -79,6 +79,7 @@ class _SignUpState extends State<SignUp> {
     String password = _passwordController.text;
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
     if(user != null){
+      // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, "/Home");
     }
   }

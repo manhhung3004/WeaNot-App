@@ -62,6 +62,14 @@ class _SignUpState extends State<SignUp> {
                 ),
 
                 const SizedBox(height: 10),
+                //repeat password
+                MyTextField(
+                  controller: passwordController,
+                  hintText: 'Repeat Password',
+                  obscureText: true,
+                ),
+
+                const SizedBox(height: 10),
                 button_login(onTap: signUserIn),
                 const SizedBox(height: 50),
                   ],

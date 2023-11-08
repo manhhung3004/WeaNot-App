@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/login/my_button.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'my_button.dart';
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
@@ -114,7 +114,7 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 50),
 
               // google + apple sign in buttons
-              const Row(
+               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // google button

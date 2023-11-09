@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/ui/welcome.dart';
 
 class MyButton extends StatelessWidget {
-  final Function()? onTap;
+  final Function() onTap;
   const MyButton({super.key, required this.onTap});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
+        onTap();
     },
       child: Container(
         margin: const EdgeInsets.only(left: 20, right: 20),

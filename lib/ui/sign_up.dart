@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/main.dart';
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
   @override
@@ -48,7 +49,7 @@ class _SignUpState extends State<SignUp> {
                 // username textfield
                 MyTextField(
                   controller: _emailController,
-                  hintText: 'Username',
+                  hintText: 'E-Mail',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
@@ -56,13 +57,6 @@ class _SignUpState extends State<SignUp> {
                 MyTextField(
                   controller: _passwordController,
                   hintText: 'Password',
-                  obscureText: true,
-                ),
-                const SizedBox(height: 10),
-                //repeat password
-                MyTextField(
-                  controller: _repeatpasswordController,
-                  hintText: 'Repeat Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
@@ -77,10 +71,19 @@ class _SignUpState extends State<SignUp> {
   void _signUp() async {
     String email = _emailController.text;
     String password = _passwordController.text;
-    User? user = await _auth.signUpWithEmailAndPassword(email, password);
-    if(user != null){
-      Navigator.pushNamed(context, "/Home");
+    await FirebaseAuth.instance.
+    createUserWithEmailAndPassword(email: email, password: password).then((value) {
+      print(value);
+      if (email != null && password != null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      }
+      else print("Error !!");
     }
-  }
+
+    ).onError((error, stackTrace) {
+      print("Error!! ${error.toString()}");
+    });
+    }
 }
 

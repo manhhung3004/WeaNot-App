@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/ui/sign_up.dart';
 import 'my_button.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -69,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               // sign in button
               MyButton(
+
                 onTap: _signIn,
               ),
               // or continue with
@@ -118,12 +120,19 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
-                  const Text(
-                    'Register now',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SignUp()), (route) => false);
+                    },
+                    child: Text(
+                    "Sign Up",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold
+                      ),
+                  )
+
+
                   ),
                 ],
               )

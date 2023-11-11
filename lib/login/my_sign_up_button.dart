@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/ui/welcome.dart';
 
+// ignore: camel_case_types
 class button_login extends StatelessWidget {
   final Function() onTap;
   const button_login({super.key, required this.onTap});

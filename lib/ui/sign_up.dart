@@ -84,6 +84,12 @@ class _SignUpState extends State<SignUp> {
     ).onError((error, stackTrace) {
       print("Error!! ${error.toString()}");
     });
+
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    if(user != null){
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, "Home");
+
     }
 }
 

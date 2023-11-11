@@ -2,8 +2,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
+import 'package:weather_app/login/login.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/ui/home.dart';
 import 'package:weather_app/ui/welcome.dart';
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -15,20 +17,19 @@ class _SignUpState extends State<SignUp> {
   final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatpasswordController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _repeatpasswordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.grey[300],
-        body: SafeArea(
-          child: Center(
+      body: SafeArea(
+        child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -63,17 +64,68 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 10),
                 button_login(onTap: _signUp),
                 const SizedBox(height: 50),
-                ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Already have an account ?',
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                        onTap: (){
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+                        },
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold
+                          ),
+                        )
+                    ),
+                  ],
                 )
-            ),
-          ),
-        );
+
+              ],
+
+
+            )
+
+        ),
+      ),
+    );
+
   }
+
   void _signUp() async {
     String email = _emailController.text;
     String password = _passwordController.text;
+    try {
+      await FirebaseAuth.instance.
+      createUserWithEmailAndPassword(email: email, password: password).then((
+          value) {
+        print(value);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      });
+    } on FirebaseAuthException catch (e) {
+      print(e);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(e.message.toString()),
+            );
+
+    });
+  }
+
+
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
-    if(user != null){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const Welcome()));
+    if (user != null) {
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, "Home");
     }
-}}
+  }
+}

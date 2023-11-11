@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/ui/forget_password.dart';
 import 'package:weather_app/ui/sign_up.dart';
 import 'package:weather_app/ui/welcome.dart';
 import 'my_button.dart';
@@ -14,12 +15,14 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,10 +63,25 @@ class _LoginPageState extends State<LoginPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
+                    Row(
+                      children: [
+                        Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Colors.grey[600]),
+
+                        ),
+                        // GestureDetector(
+                        // onTap: (){
+                        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                        // },
+                        // )
+                      ],
                     ),
+                    //  GestureDetector(
+                    //   onTap: (){
+                    //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                    //   },
+                    //   )
                   ],
                 ),
               ),
@@ -119,16 +137,19 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
-                    onTap: (){
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SignUp()), (route) => false);
-                    },
-                    child: const Text(
-                    "Sign Up",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold
-                      ),
-                    )
+                      onTap: () {
+                        Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (context) => SignUp()), (
+                                route) => false);
+                      },
+                      child: Text(
+                        "Sign Up",
+                        style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold
+                        ),
+                      )
+
                   ),
                 ],
               )
@@ -138,6 +159,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   void _signIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
@@ -149,10 +171,5 @@ class _LoginPageState extends State<LoginPage> {
       }
       else print("Error !!");
     }
-
-    ).onError((error, stackTrace) {
-      print("Error!! ${error.toString()}");
-    });
-  }
-}
-
+  );
+}}

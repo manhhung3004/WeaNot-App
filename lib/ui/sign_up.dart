@@ -1,9 +1,10 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
-import 'package:weather_app/main.dart';
+import 'package:weather_app/ui/welcome.dart';
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
   @override
@@ -73,7 +74,6 @@ class _SignUpState extends State<SignUp> {
     String password = _passwordController.text;
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
     if(user != null){
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, "/Home");
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Welcome()));
     }
 }}

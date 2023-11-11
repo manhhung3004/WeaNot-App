@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/ui/sign_up.dart';
-import '../main.dart';
+import 'package:weather_app/ui/welcome.dart';
 import 'my_button.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,7 +12,6 @@ class LoginPage extends StatefulWidget {
 }
 class _LoginPageState extends State<LoginPage> {
 
-  final FirebaseAuthService _auth = FirebaseAuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   @override
@@ -34,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
               // logo
               const Icon(
                 Icons.lock,
-                size: 70,
+                size: 50,
               ),
               // welcome back, you've been missed!
               Text(
@@ -124,15 +122,13 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: (){
                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SignUp()), (route) => false);
                     },
-                    child: Text(
+                    child: const Text(
                     "Sign Up",
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold
                       ),
-                  )
-
-
+                    )
                   ),
                 ],
               )
@@ -147,10 +143,9 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
     await FirebaseAuth.instance.
     signInWithEmailAndPassword(email: email, password: password).then((value) {
-      print(value);
       if (email != null && password != null) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Welcome()));
       }
       else print("Error !!");
     }

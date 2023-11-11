@@ -1,17 +1,14 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/main.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/weather_item.dart';
+import 'package:weather_app/ui/welcome.dart';
 
 class DetailPage extends StatefulWidget {
   final List consolidatedWeatherList;
   final int selectedId;
   final String location;
   const DetailPage({super.key, required this.consolidatedWeatherList, required this.selectedId, required this.location});
-
   @override
   State<DetailPage> createState() => _DetailPageState();
 }
@@ -42,7 +39,7 @@ class _DetailPageState extends State<DetailPage> {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton (
               onPressed:  (){
-                Navigator.push(context,MaterialPageRoute(builder: (context) => const Home()));
+                Navigator.push(context,MaterialPageRoute(builder: (context) => const Welcome()));
               },
               icon: const Icon(Icons.settings),
             )
@@ -67,7 +64,6 @@ class _DetailPageState extends State<DetailPage> {
                   var weatherUrl = futureWeatherName.replaceAll('','').toLowerCase();
                   var parseDate = DateTime.parse(widget.consolidatedWeatherList[index]["dt_txt"]);
                   var newDate = DateFormat('EEEE').format(parseDate).substring(0,3);
-
                   return Container(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     margin: const EdgeInsets.only(right: 20),

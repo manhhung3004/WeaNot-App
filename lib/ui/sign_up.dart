@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/main.dart';
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
   @override
@@ -48,7 +49,7 @@ class _SignUpState extends State<SignUp> {
                 // username textfield
                 MyTextField(
                   controller: _emailController,
-                  hintText: 'Username',
+                  hintText: 'E-Mail',
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
@@ -56,13 +57,6 @@ class _SignUpState extends State<SignUp> {
                 MyTextField(
                   controller: _passwordController,
                   hintText: 'Password',
-                  obscureText: true,
-                ),
-                const SizedBox(height: 10),
-                //repeat password
-                MyTextField(
-                  controller: _repeatpasswordController,
-                  hintText: 'Repeat Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
@@ -82,6 +76,4 @@ class _SignUpState extends State<SignUp> {
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, "/Home");
     }
-  }
-}
-
+}}

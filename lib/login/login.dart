@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/ui/sign_up.dart';
+import '../main.dart';
 import 'my_button.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -118,12 +120,19 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
-                  const Text(
-                    'Register now',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SignUp()), (route) => false);
+                    },
+                    child: Text(
+                    "Sign Up",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold
+                      ),
+                  )
+
+
                   ),
                 ],
               )
@@ -136,10 +145,19 @@ class _LoginPageState extends State<LoginPage> {
   void _signIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
-    if(user != null){
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, "/Home");
+    await FirebaseAuth.instance.
+    signInWithEmailAndPassword(email: email, password: password).then((value) {
+      print(value);
+      if (email != null && password != null) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      }
+      else print("Error !!");
+    }
+
+    ).onError((error, stackTrace) {
+      print("Error!! ${error.toString()}");
+    });
   }
 }
-}
+

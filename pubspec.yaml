@@ -39,6 +39,7 @@ dependencies:
   firebase_storage: ^11.4.1
   firebase_core: ^2.21.0
 
+
   intl: ^0.18.1
   http: ^1.1.0
   dio: ^5.3.3

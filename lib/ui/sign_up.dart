@@ -74,6 +74,6 @@ class _SignUpState extends State<SignUp> {
     String password = _passwordController.text;
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
     if(user != null){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Welcome()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const Welcome()));
     }
 }}

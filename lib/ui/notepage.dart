@@ -64,9 +64,8 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
-    Constants myConstants = Constants();
     return Scaffold(
-      backgroundColor: myConstants.secondaryColor,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(
@@ -76,7 +75,8 @@ class _NotePageState extends State<NotePage> {
               children: [
                 const Text(
                   'Notes',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 30, color: Color.fromARGB(255, 150, 150, 150)),
                 ),
                 IconButton(
                     onPressed: () {
@@ -89,7 +89,8 @@ class _NotePageState extends State<NotePage> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                          color: Colors.grey.shade800.withOpacity(.8),
+                          color: Color.fromARGB(255, 199, 199, 199)
+                              .withOpacity(.8),
                           borderRadius: BorderRadius.circular(10)),
                       child: const Icon(
                         Icons.sort,
@@ -108,12 +109,12 @@ class _NotePageState extends State<NotePage> {
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 hintText: "Search notes...",
                 hintStyle:
-                    const TextStyle(color: Color.fromARGB(255, 238, 238, 238)),
+                    const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                 prefixIcon: const Icon(
                   Icons.search,
-                  color: Color.fromARGB(255, 255, 254, 254),
+                  color: Color.fromARGB(255, 255, 255, 255),
                 ),
-                fillColor: const Color.fromARGB(150, 179, 179, 179),
+                fillColor: Color.fromARGB(199, 199, 199, 199),
                 filled: true,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),

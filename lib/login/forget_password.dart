@@ -16,14 +16,14 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     _emailController.dispose();
     super.dispose();
   }
-  Future PasswordReset() async {
+  Future passwordReset() async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
           email: _emailController.text.trim());
       showDialog(
           context: context,
           builder:  (context) {
-            return AlertDialog(
+            return const AlertDialog(
               content: Text('Password reset link sent ! Please check your E-mail'),
             );
           });
@@ -38,6 +38,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       });
     }
     }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -46,18 +47,18 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       ),
       body: Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 25.0),
           child: Text("Enter your E-mail for password reset !"),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: TextField(
             controller: _emailController,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white),
+                borderSide: const BorderSide(color: Colors.white),
                 borderRadius: BorderRadius.circular(12),
     ),
     hintText: 'Email',
@@ -66,11 +67,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               )
             )
           ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         MaterialButton(
-          onPressed: PasswordReset,
-          child: Text('Reset Password'),
+          onPressed: passwordReset,
           color: Colors.grey[200],
+          child: const Text('Reset Password'),
         )
         ]
       )

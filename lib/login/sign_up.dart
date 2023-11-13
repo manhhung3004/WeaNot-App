@@ -6,7 +6,6 @@ import 'package:weather_app/login/login.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/ui/home.dart';
-import 'package:weather_app/ui/welcome.dart';
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
   @override
@@ -74,9 +73,9 @@ class _SignUpState extends State<SignUp> {
                     const SizedBox(width: 4),
                     GestureDetector(
                         onTap: (){
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
                         },
-                        child: Text(
+                        child: const Text(
                           "Sign In",
                           style: TextStyle(
                               color: Colors.blue,
@@ -86,16 +85,11 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 )
-
               ],
-
-
             )
-
         ),
       ),
     );
-
   }
 
   void _signUp() async {
@@ -105,22 +99,19 @@ class _SignUpState extends State<SignUp> {
       await FirebaseAuth.instance.
       createUserWithEmailAndPassword(email: email, password: password).then((
           value) {
-        print(value);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Home()));
       });
     } on FirebaseAuthException catch (e) {
-      print(e);
+      // ignore: use_build_context_synchronously
       showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
               content: Text(e.message.toString()),
             );
-
     });
   }
-
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
     if (user != null) {

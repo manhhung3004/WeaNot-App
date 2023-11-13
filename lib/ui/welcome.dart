@@ -3,7 +3,7 @@ import 'package:weather_app/calender/calender.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/home.dart';
-import 'package:weather_app/ui/notepage.dart';
+import 'package:weather_app/calender/notepage.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});

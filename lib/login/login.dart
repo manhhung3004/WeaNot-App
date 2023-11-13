@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
-import 'package:weather_app/ui/forget_password.dart';
-import 'package:weather_app/ui/sign_up.dart';
+import 'package:weather_app/login/sign_up.dart';
 import 'package:weather_app/ui/welcome.dart';
 import 'my_button.dart';
 class LoginPage extends StatefulWidget {
@@ -68,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
                         Text(
                           'Forgot Password?',
                           style: TextStyle(color: Colors.grey[600]),
-
                         ),
                         // GestureDetector(
                         // onTap: (){
@@ -139,17 +137,16 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                       onTap: () {
                         Navigator.pushAndRemoveUntil(context,
-                            MaterialPageRoute(builder: (context) => SignUp()), (
+                            MaterialPageRoute(builder: (context) => const SignUp()), (
                                 route) => false);
                       },
-                      child: Text(
+                      child: const Text(
                         "Sign Up",
                         style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold
                         ),
                       )
-
                   ),
                 ],
               )
@@ -159,17 +156,13 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
   void _signIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
     await FirebaseAuth.instance.
     signInWithEmailAndPassword(email: email, password: password).then((value) {
-      if (email != null && password != null) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Welcome()));
-      }
-      else print("Error !!");
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Welcome()));
     }
   );
 }}

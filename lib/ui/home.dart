@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 }
 class _HomeState extends State<Home> {
   Constants myContants = Constants();
-
+  int selected = 0;
   int temperature = 0;
   int temperatureF= 0;
   int maxTemp = 0;
@@ -36,7 +36,8 @@ class _HomeState extends State<Home> {
     http.Response searchResult = await http.get(Uri.parse('https://api.openweathermap.org/data/2.5/weather?q=$location&appid=$keyurl'));
     var result = json.decode(searchResult.body);
     setState(() {
-    id = result["id"]?? 0;
+    id = result["id"];
+    print(id);
     });
   }
   void fetchWeatherData() async {
@@ -45,21 +46,23 @@ class _HomeState extends State<Home> {
     var consolidatedWeather = result["list"];
     setState(() {
       //Lấy dữ liệu cụ thể của hôm nay
-      temperatureF = (result["list"][int.parse("0")]["main"]["temp"]).round() ?? 0;
-      weatherStateName = (result["list"][int.parse("0")]["weather"][int.parse("0")]["main"]) ?? 0;
-      humidity = (result["list"][int.parse("0")]["main"]["humidity"]).round() ?? 0;
-      windSpeed = (result["list"][int.parse("0")]["wind"]["speed"]).round() ?? 0;
-      maxTempF = (result["list"][int.parse("0")]["main"]['temp_max']).round() ?? 0;
+      for (int i = 0 ; i < 40; i ++){
+        consolidatedWeather.add(consolidatedWeather[i]);
+      }
+      temperatureF = (consolidatedWeather[0]["main"]["temp"]).round();
+      weatherStateName = (consolidatedWeather[0]["weather"][0]["main"]);
+      humidity = (consolidatedWeather[0]["main"]["humidity"]).round() ;
+      windSpeed = (consolidatedWeather[0]["wind"]["speed"]).round() ;
+      maxTempF = (consolidatedWeather[0]["main"]['temp_max']).round() ;
       //Định dạng hiển thị ngày
-      var myDate = DateTime.parse((result["list"][int.parse("0")]["dt_txt"]).toString());
+      var myDate = DateTime.parse((consolidatedWeather[0]["dt_txt"]).toString());
       currentDate = DateFormat('EEEE, d MMMM').format(myDate);
       //Chuyển từ đội K sang độ C
       temperature =  temperatureF - 273 ;
-      maxTemp = maxTempF - 273;
-      //gán giá trị cho image url
-      consolidataWeatherList = consolidatedWeather;
+      maxTemp =  maxTempF - 273;
       imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
-      consolidatedWeather = Set.from(result.values).toList();
+      consolidataWeatherList = consolidatedWeather.toSet().toList();
+      print(consolidataWeatherList);
     });
   }
   @override
@@ -111,7 +114,7 @@ class _HomeState extends State<Home> {
                     onChanged: (String? newValue) {
                       setState(() {
                         location = newValue!;
-                        fetchLocation(newValue);
+                        fetchLocation(location);
                         fetchWeatherData();},
                         );
                       },
@@ -223,17 +226,18 @@ class _HomeState extends State<Home> {
             ),
             //Set forecast
             const SizedBox(height: 1,),
-            Expanded(child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: consolidataWeatherList.length,
-              itemBuilder: (BuildContext context, int index){
-                String today = DateTime.now().toString().substring(0,10);
-                var selectedDay = consolidataWeatherList[index]["dt_txt"][int.parse("0")] ?? 0;
-                var futurWeatherName = consolidataWeatherList[index]["weather"][int.parse("0")]["main"] ?? 0;
-                var weatherUrl = futurWeatherName.replaceAll('','').toLowerCase();
-                var parsedDate = DateTime.parse((consolidataWeatherList[index]["dt_txt"]).toString());
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: consolidataWeatherList.length,
+                itemBuilder: (BuildContext context, int index){
+                  String today = DateTime.now().toString().substring(0,10);
+                  var selectedDay = consolidataWeatherList[index]["dt_txt"];
+                  var futurWeatherName = consolidataWeatherList[index]["weather"][0]["main"];
+                  var weatherUrl = futurWeatherName.replaceAll('','').toLowerCase();
+                  var parsedDate = DateTime.parse((consolidataWeatherList[index]["dt_txt"]).toString());
                 // ignore: non_constant_identifier_names
-                var SlipStringDate = DateFormat('HH,EEEE').format(parsedDate).substring(0,6);
+                  var SlipStringDate = DateFormat('HH,EEEE').format(parsedDate).substring(0,6);
                 return GestureDetector(
                   onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(consolidatedWeatherList: consolidataWeatherList, selectedId: index, location: location,)));

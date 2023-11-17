@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
       //gán giá trị cho image url
       consolidataWeatherList = consolidatedWeather;
       imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
-      consolidatedWeather = Set.from(result.values).toList();
+      // consolidatedWeather = Set.from(result.values).toList();
     });
   }
   @override

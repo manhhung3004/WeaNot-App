@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/dashboard/dashboard.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/login/sign_up.dart';
-import 'package:weather_app/ui/welcome.dart';
 import 'my_button.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -70,14 +70,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         // GestureDetector(
                         // onTap: (){
-                        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
                         // },
                         // )
                       ],
                     ),
-                    //  GestureDetector(
+                    // GestureDetector(
                     //   onTap: (){
-                    //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                    //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
                     //   },
                     //   )
                   ],
@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
     await FirebaseAuth.instance.
     signInWithEmailAndPassword(email: email, password: password).then((value) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Welcome()));
+          context, MaterialPageRoute(builder: (context) =>  const Dashboard()));
     }
   );
 }}

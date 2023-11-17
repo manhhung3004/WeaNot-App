@@ -100,7 +100,7 @@ class _SignUpState extends State<SignUp> {
       createUserWithEmailAndPassword(email: email, password: password).then((
           value) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => const Home()));
       });
     } on FirebaseAuthException catch (e) {
       // ignore: use_build_context_synchronously

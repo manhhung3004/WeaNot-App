@@ -1,5 +1,6 @@
-import 'dart:math';
+  import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/note.dart';
@@ -7,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/constants/colors.dart';
 import 'package:weather_app/screen/editnote.dart';
 import 'package:share/share.dart';
+
 
 class NotePage extends StatefulWidget {
   const NotePage({Key? key}) : super(key: key);
@@ -125,6 +127,7 @@ class _NotePageState extends State<NotePage> {
                   borderSide: const BorderSide(color: Colors.transparent),
                 ),
               ),
+
             ),
             Expanded(
               child: ListView.builder(
@@ -266,6 +269,9 @@ class _NotePageState extends State<NotePage> {
 void shareNote(Note note) {
   String text = '${note.title}\n\n${note.content}';
   Share.share(text);
+}
+void saveNoteToFirebase(Note note){
+
 }
 
 Future<dynamic> confirmDialog(BuildContext context) {

@@ -77,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
 
                            ),
                          )
-                        
+
                         // GestureDetector(
                         // onTap: (){
                         // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);

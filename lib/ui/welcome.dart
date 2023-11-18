@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/calender/calender.dart';
+import 'package:weather_app/calender/notehome_demo.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/home.dart';
@@ -62,7 +63,7 @@ class _WelcometState extends State<Welcome> {
               if(value == 0){
                   Navigator.push(context,  MaterialPageRoute(builder: (context) => const Home()));
               }else if(value == 1){
-                  Navigator.push(context,  MaterialPageRoute(builder: (context) => const NotePage()));
+                  Navigator.push(context,  MaterialPageRoute(builder: (context) => const HomeScreen()));
               }else if(value == 2){
                   Navigator.push(context,  MaterialPageRoute(builder: (context) => const Calender()));
               }

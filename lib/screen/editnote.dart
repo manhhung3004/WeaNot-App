@@ -43,8 +43,8 @@ class _EditScreenState extends State<EditScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 95, 95, 95)
-                            .withOpacity(.8),
+                        color:
+                            Color.fromARGB(255, 207, 207, 207).withOpacity(.8),
                         borderRadius: BorderRadius.circular(10)),
                     child: const Icon(
                       Icons.arrow_back_ios_new,
@@ -53,13 +53,14 @@ class _EditScreenState extends State<EditScreen> {
                   ))
             ],
           ),
-          Expanded(
+          Flexible(
               child: ListView(
             children: [
               TextField(
                 controller: _titleController,
                 style: const TextStyle(
-                    color: Color.fromARGB(255, 100, 100, 100), fontSize: 30),
+                    color: Color.fromARGB(255, 130, 130, 130), fontSize: 30),
+                maxLines: null,
                 decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Title',

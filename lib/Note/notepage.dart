@@ -1,8 +1,6 @@
   import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/Note/note.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/models/colors.dart';
@@ -67,7 +65,7 @@ class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
         child: Column(
@@ -91,7 +89,7 @@ class _NotePageState extends State<NotePage> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 199, 199, 199)
+                          color: const Color.fromARGB(255, 199, 199, 199)
                               .withOpacity(.8),
                           borderRadius: BorderRadius.circular(10)),
                       child: const Icon(
@@ -116,7 +114,7 @@ class _NotePageState extends State<NotePage> {
                   Icons.search,
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
-                fillColor: Color.fromARGB(199, 199, 199, 199),
+                fillColor: const Color.fromARGB(199, 199, 199, 199),
                 filled: true,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),

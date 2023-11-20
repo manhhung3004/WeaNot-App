@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/dashboard/dashboard.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/login/sign_up.dart';
-import 'package:weather_app/ui/welcome.dart';
 import 'forget_password.dart';
 import 'my_button.dart';
 class LoginPage extends StatefulWidget {
@@ -66,21 +66,20 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Row(
                       children: [
+                        GestureDetector(
+                        onTap: (){
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                        },
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(color: Colors.grey[600]),
 
-                         GestureDetector(
-                         onTap: (){
-                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
-                         },
-                           child: Text(
-                             'Forgot Password?',
-                             style: TextStyle(color: Colors.grey[600]),
-
-                           ),
-                         )
+                          ),
+                        )
 
                         // GestureDetector(
                         // onTap: (){
-                        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
                         // },
                         // )
                       ],
@@ -88,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
 
                     //  GestureDetector(
                     //   onTap: (){
-                    //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                    //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
                     //   },
                     //   )
                   ],
@@ -173,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
     await FirebaseAuth.instance.
     signInWithEmailAndPassword(email: email, password: password).then((value) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Welcome()));
+          context, MaterialPageRoute(builder: (context) =>  const Dashboard()));
     }
   );
 }}

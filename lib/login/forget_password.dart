@@ -20,6 +20,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
           email: _emailController.text.trim());
+      // ignore: use_build_context_synchronously
       showDialog(
           context: context,
           builder:  (context) {
@@ -28,7 +29,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
             );
           });
     } on FirebaseAuthException catch (e){
+      // ignore: avoid_print
       print(e);
+      // ignore: use_build_context_synchronously
       showDialog(
           context: context,
           builder:  (context) {

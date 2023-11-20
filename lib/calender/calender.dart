@@ -26,6 +26,7 @@ class _CalenderState extends State<Calender> {
       child: Column(
         children: [
           Text("Selected Day = ${today.toString().split("")[0]}"),
+          // ignore: avoid_unnecessary_containers
           Container(
             child: TableCalendar(
               locale: "en_US",

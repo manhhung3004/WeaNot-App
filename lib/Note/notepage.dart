@@ -3,10 +3,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
-import 'package:weather_app/models/note.dart';
+import 'package:weather_app/Note/note.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/constants/colors.dart';
-import 'package:weather_app/screen/editnote.dart';
+import 'package:weather_app/models/colors.dart';
+import 'package:weather_app/Note/editnote.dart';
 import 'package:share/share.dart';
 
 

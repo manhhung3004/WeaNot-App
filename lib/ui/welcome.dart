@@ -4,7 +4,7 @@ import 'package:weather_app/calender/notehome_demo.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/home.dart';
-import 'package:weather_app/calender/notepage.dart';
+import 'package:weather_app/Note/notepage.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -29,18 +29,7 @@ class _WelcometState extends State<Welcome> {
         title: Text('${selectedcities.length} selected'),
         elevation: 0.0,
         actions: [
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 8.0),
-          //   child: IconButton (
-          //     onPressed:  (){
-          //       Navigator.push(context,MaterialPageRoute(builder: (context) => const Welcome()));
-          //     },
-          //     icon: const Icon(Icons.settings),
-          //   )
-          // ),
           PopupMenuButton(
-            // add icon, by default "3 dot" icon
-            // icon: Icon(Icons.book)
             itemBuilder: (context){
               return [
                     const PopupMenuItem<int>(

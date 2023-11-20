@@ -87,6 +87,7 @@ class _DetailPageState extends State<DetailPage> {
                           color: index == selectedIndex ? Colors.blue : Colors.white,
                           fontWeight: FontWeight.w500,
                         ),),
+                        // ignore: prefer_interpolation_to_compose_strings
                         Image.asset("${'assets/' + weatherUrl}.png",
                             width: 40,),
                         Text(
@@ -273,6 +274,7 @@ class _DetailPageState extends State<DetailPage> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     // ignore: duplicate_ignore
                                     children: [
+                                      // ignore: prefer_interpolation_to_compose_strings
                                       Image.asset('${'assets/' + futureImageURL}.png', width: 30,),
                                       Text(widget.consolidatedWeatherList[index]["weather"][int.parse("0")]["main"]),
                                     ],

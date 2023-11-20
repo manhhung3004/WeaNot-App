@@ -4,6 +4,7 @@ import 'package:weather_app/dashboard/dashboard.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/login/sign_up.dart';
+import 'forget_password.dart';
 import 'my_button.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: Center(
@@ -64,10 +66,17 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          'Forgot Password?',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
+                        GestureDetector(
+                        onTap: (){
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
+                        },
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(color: Colors.grey[600]),
+
+                          ),
+                        )
+
                         // GestureDetector(
                         // onTap: (){
                         // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
@@ -75,7 +84,8 @@ class _LoginPageState extends State<LoginPage> {
                         // )
                       ],
                     ),
-                    // GestureDetector(
+
+                    //  GestureDetector(
                     //   onTap: (){
                     //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
                     //   },

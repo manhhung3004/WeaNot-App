@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/calender/calender.dart';
 import 'package:weather_app/Note/notepage.dart';
 import 'package:weather_app/models/constants.dart';
@@ -50,7 +51,11 @@ class _Dashboard extends State<Dashboard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Profile()));
+                            },
+                          child: Container(
                             height: 40,
                             width: 40,
                             decoration: BoxDecoration(
@@ -58,7 +63,7 @@ class _Dashboard extends State<Dashboard> {
                               color: Colors.white,
                               image: const DecorationImage(image: AssetImage("assets/profile.png")),
                             ),
-                          ),
+                          )),
                         ],
                       ),
                     ),
@@ -154,5 +159,8 @@ class _Dashboard extends State<Dashboard> {
         ),
       ),
     );
+  }
+  void tranferPage(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Profile()));
   }
 }

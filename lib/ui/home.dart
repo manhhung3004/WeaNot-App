@@ -37,7 +37,6 @@ class _HomeState extends State<Home> {
     var result = json.decode(searchResult.body);
     setState(() {
     id = result["id"];
-    print(id);
     });
   }
   void fetchWeatherData() async {
@@ -62,7 +61,6 @@ class _HomeState extends State<Home> {
       maxTemp =  maxTempF - 273;
       imageUrl = weatherStateName.replaceAll(' ', '').toLowerCase();
       consolidataWeatherList = consolidatedWeather.toSet().toList();
-      print(consolidataWeatherList);
     });
   }
   @override
@@ -96,13 +94,12 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //Show out profile images
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(18)),
-                child: Image.asset('assets/profile.png',width: 40,height: 40,),
+              const SizedBox(
+                width: 40,
+                height: 40,
               ),
-              // Show out locatoion dropdown
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset('assets/pin.png',width: 10,),

@@ -1,4 +1,3 @@
-
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 
@@ -16,68 +15,71 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     _emailController.dispose();
     super.dispose();
   }
+
   Future passwordReset() async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-          email: _emailController.text.trim());
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text.trim());
       // ignore: use_build_context_synchronously
       showDialog(
           context: context,
-          builder:  (context) {
+          builder: (context) {
             return const AlertDialog(
-              content: Text('Password reset link sent ! Please check your E-mail'),
+              content:
+                  Text('Password reset link sent ! Please check your E-mail'),
             );
           });
-    } on FirebaseAuthException catch (e){
-      // ignore: avoid_print
-      print(e);
+    } on FirebaseAuthException catch (e) {
       // ignore: use_build_context_synchronously
       showDialog(
           context: context,
-          builder:  (context) {
+          builder: (context) {
             return AlertDialog(
               content: Text(e.message.toString()),
             );
-      });
+          });
     }
-    }
-  @override
+  }
+@override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey[200],
-        elevation: 0  ,
-      ),
-      body: Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0),
-          child: Text("Enter your E-mail for password reset !"),
+      body: Container(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              'Forgot Password',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Text(
+              'please fit form below!!!!',
+              style: TextStyle(
+                fontSize: 12.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: passwordReset,
+              child: const Text('Reset Password'),
+            ),
+          ],
         ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-          child: TextField(
-            controller: _emailController,
-            decoration: InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(12),
-    ),
-    hintText: 'Email',
-    fillColor: Colors.grey[200],
-    filled: true,
-              )
-            )
-          ),
-        const SizedBox(height: 10),
-        MaterialButton(
-          onPressed: passwordReset,
-          color: Colors.grey[200],
-          child: const Text('Reset Password'),
-        )
-        ]
-      )
+      ),
     );
   }
 }

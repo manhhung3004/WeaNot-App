@@ -28,7 +28,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
             child: Column(
@@ -54,6 +54,10 @@ class _SignUpState extends State<SignUp> {
                   controller: _emailController,
                   hintText: 'E-Mail',
                   obscureText: false,
+                  decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
                 ),
                 const SizedBox(height: 10),
                 // password textfield
@@ -61,6 +65,10 @@ class _SignUpState extends State<SignUp> {
                   controller: _passwordController,
                   hintText: 'Password',
                   obscureText: true,
+                  decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
                 ),
                 const SizedBox(height: 10),
                 button_login(onTap: _signUp),

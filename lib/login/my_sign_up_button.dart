@@ -15,7 +15,7 @@ class button_login extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(25),
         margin: const EdgeInsets.symmetric(horizontal: 25),
-        decoration: BoxDecoration(color: Colors.black,
+        decoration: BoxDecoration(color: Colors.blue,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Center(

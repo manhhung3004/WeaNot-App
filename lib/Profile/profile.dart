@@ -1,5 +1,7 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/login/login.dart';
 import 'package:weather_app/models/constants.dart';
 
 class Profile extends StatefulWidget {
@@ -31,7 +33,31 @@ class _Profile extends State<Profile> {
             const SizedBox(height: 20,),
             itemProfile("Email", "21522122@gm.uit.edu.vn", CupertinoIcons.mail),
             const SizedBox(height: 40,),
-            ElevatedButton(onPressed: () {}, child: const Text('Log out'))
+            ElevatedButton(
+              onPressed: () {
+                showDialog(context: context,
+                  builder: (BuildContext context){
+                      return CupertinoAlertDialog(
+                        title: const Text('Do you want to exit the app?'),
+                        content: const Text('Please confirm'),
+                        actions: <Widget>[
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()),(route) => false,);
+                              },
+                              child: const Text('Yes')),
+                          TextButton(
+                              onPressed: () {
+                                _dismissDialog();
+                              },
+                              child: const Text('No'))
+                        ],
+                      );
+                  }
+                );
+              },
+              child: const Text('Log out'),
+            ),
           ],
         ),
       ),
@@ -61,5 +87,8 @@ class _Profile extends State<Profile> {
           tileColor: Colors.white,
         ),
       );
+  }
+  _dismissDialog() {
+    Navigator.pop(context);
   }
 }

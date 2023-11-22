@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/dashboard/dashboard.dart';
 import 'package:weather_app/login/square.dart';
@@ -6,13 +7,14 @@ import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/login/sign_up.dart';
 import 'forget_password.dart';
 import 'my_button.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-class _LoginPageState extends State<LoginPage> {
 
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -27,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -51,12 +53,18 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _emailController,
                 hintText: 'Username',
                 obscureText: false,
+                decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
               ),
               // password textfield
               MyTextField(
                 controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
+                decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+              ),
               ),
               // forgot password?
               Padding(
@@ -67,35 +75,28 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       children: [
                         GestureDetector(
-                        onTap: (){
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => ForgetPassword()), (route) => false);
-                        },
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ForgetPassword()),
+                            );
+                          },
                           child: Text(
                             'Forgot Password?',
                             style: TextStyle(color: Colors.grey[600]),
-
                           ),
                         )
-
-                        // GestureDetector(
-                        // onTap: (){
-                        // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
-                        // },
-                        // )
                       ],
                     ),
-
-                    //  GestureDetector(
-                    //   onTap: (){
-                    //     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const ForgetPassword()), (route) => false);
-                    //   },
-                    //   )
                   ],
                 ),
               ),
               // sign in button
               MyButton(
-                onTap: _signIn,
+                onTap: _signIn, child: const Text(
+                  "sign in"
+                ),
               ),
               // or continue with
               Padding(
@@ -146,18 +147,16 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(width: 4),
                   GestureDetector(
                       onTap: () {
-                        Navigator.pushAndRemoveUntil(context,
-                            MaterialPageRoute(builder: (context) => const SignUp()), (
-                                route) => false);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUp()));
                       },
                       child: const Text(
                         "Sign Up",
                         style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold
-                        ),
-                      )
-                  ),
+                            color: Colors.blue, fontWeight: FontWeight.bold),
+                      )),
                 ],
               )
             ],
@@ -166,13 +165,91 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   void _signIn() async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-    await FirebaseAuth.instance.
-    signInWithEmailAndPassword(email: email, password: password).then((value) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) =>  const Dashboard()));
+    try {
+      String email = _emailController.text;
+      String password = _passwordController.text;
+      bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(email);
+      if (email.isEmpty || password.isEmpty && isValid == true) {
+        showCupertinoDialog();
+        return;
+      }
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      )
+        .then((value) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const Dashboard()),
+            (Route<dynamic> route) => false);
+      });
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          wrongAccount();
+          _emailController.clear();
+          _passwordController.clear();
+          break;
+        case 'wrong-password':
+          wrongAccount();
+          _emailController.clear();
+          _passwordController.clear();
+          break;
+        default:
+          wrongAccount();
+          _emailController.clear();
+          _passwordController.clear();
+          break;
+      }
+    } catch (e) {
+      // Handle any other general exceptions
+      _emailController.clear();
+      _passwordController.clear();
+      wrongAccount();
     }
-  );
-}}
+  }
+
+  // hiển thị khi không nhập mật khẩu tài khoảng
+  void showCupertinoDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: const Text('Emtple your email or password!!!'),
+            content: const Text('Please try again!'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    _dismissDialog();
+                  },
+                  child: const Text('Close'))
+            ],
+          );
+        });
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
+  }
+
+  // Hiển thị thông báo khi sai mật khẩu tài khoản
+  void wrongAccount() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: const Text('Wrong your email or password!!!'),
+            content: const Text('Please try again!'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    _dismissDialog();
+                  },
+                  child: const Text('Close'))
+            ],
+          );
+        });
+  }
+}

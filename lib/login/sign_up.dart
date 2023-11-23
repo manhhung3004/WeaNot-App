@@ -31,7 +31,7 @@ class _SignUpState extends State<SignUp> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
-            child: Column(
+            child:  Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),

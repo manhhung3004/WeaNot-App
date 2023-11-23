@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:weather_app/Clipper/clipper.dart';
 import 'package:weather_app/dashboard/dashboard.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
@@ -35,27 +36,55 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // logo
-              const Icon(
-                Icons.lock,
-                size: 50,
+              Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(MediaQuery.of(context).size.width, 200),
+                    painter: RPSCustomPainter(),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 0,
+                    child: CustomPaint(
+                      size: Size(MediaQuery.of(context).size.width, 200),
+                      painter: RPSCustomPainter(),
+                    ),
+                  ),
+                  Positioned(
+                    top: 140,
+                    left: 30,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Login",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 26,
+                          ),
+                        ),
+                        const SizedBox(height: 12,),
+                        Text(
+                          'Welcome back you\'ve been missed!',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
               // welcome back, you've been missed!
-              Text(
-                'Welcome back you\'ve been missed!',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
-                ),
-              ),
               // username textfield
               MyTextField(
                 controller: _emailController,
                 hintText: 'Username',
                 obscureText: false,
                 decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+                  border: OutlineInputBorder(),
+                ),
               ),
               // password textfield
               MyTextField(
@@ -63,8 +92,8 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Password',
                 obscureText: true,
                 decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+                  border: OutlineInputBorder(),
+                ),
               ),
               // forgot password?
               Padding(
@@ -94,9 +123,8 @@ class _LoginPageState extends State<LoginPage> {
               ),
               // sign in button
               MyButton(
-                onTap: _signIn, child: const Text(
-                  "sign in"
-                ),
+                onTap: _signIn,
+                child: const Text("sign in"),
               ),
               // or continue with
               Padding(
@@ -170,7 +198,8 @@ class _LoginPageState extends State<LoginPage> {
     try {
       String email = _emailController.text;
       String password = _passwordController.text;
-      bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(email);
+      bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+          .hasMatch(email);
       if (email.isEmpty || password.isEmpty && isValid == true) {
         showCupertinoDialog();
         return;
@@ -180,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
         email: email,
         password: password,
       )
-        .then((value) {
+          .then((value) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => const Dashboard()),
             (Route<dynamic> route) => false);

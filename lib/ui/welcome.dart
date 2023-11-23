@@ -28,35 +28,33 @@ class _WelcometState extends State<Welcome> {
         title: Text('${selectedcities.length} selected'),
         elevation: 0.0,
         actions: [
-          PopupMenuButton(
-            itemBuilder: (context){
-              return [
-                    const PopupMenuItem<int>(
-                        value: 0,
-                        child: Text("Weather"),
-                    ),
-
-                    const PopupMenuItem<int>(
-                        value: 1,
-                        child: Text("Take Note"),
-                    ),
-
-                    const PopupMenuItem<int>(
-                        value: 2,
-                        child: Text("Calender"),
-                    ),
-                ];
-            },
-            onSelected:(value){
-              if(value == 0){
-                  Navigator.push(context,  MaterialPageRoute(builder: (context) => const Home()));
-              }else if(value == 1){
-                  Navigator.push(context,  MaterialPageRoute(builder: (context) => const HomeScreen()));
-              }else if(value == 2){
-                  Navigator.push(context,  MaterialPageRoute(builder: (context) => const Calender()));
-              }
+          PopupMenuButton(itemBuilder: (context) {
+            return [
+              const PopupMenuItem<int>(
+                value: 0,
+                child: Text("Weather"),
+              ),
+              const PopupMenuItem<int>(
+                value: 1,
+                child: Text("Take Note"),
+              ),
+              const PopupMenuItem<int>(
+                value: 2,
+                child: Text("Calender"),
+              ),
+            ];
+          }, onSelected: (value) {
+            if (value == 0) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
+            } else if (value == 1) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+            } else if (value == 2) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Calender()));
             }
-          ),
+          }),
         ],
       ),
       body: ListView.builder(

@@ -32,7 +32,7 @@ class _Dashboard extends State<Dashboard> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          color: myContants.secondaryColor,
+          color: myContants.primaryColor,
           width: width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

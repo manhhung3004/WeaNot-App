@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:weather_app/models/constants.dart';
 class Calender extends StatefulWidget {
   const Calender ({super.key});
   @override
@@ -15,8 +16,12 @@ class _CalenderState extends State<Calender> {
   }
   @override
   Widget build(BuildContext context) {
+    Constants myContants = Constants();
     return Scaffold(
-      appBar: AppBar(title: const Text("Calender")),
+      appBar: AppBar(
+        backgroundColor: myContants.primaryColor,
+        title: const Text("Calender"),
+        ),
       body: content(),
     );
   }
@@ -26,8 +31,8 @@ class _CalenderState extends State<Calender> {
       child: Column(
         children: [
           Text("Selected Day = ${today.toString().split("")[0]}"),
-          // ignore: avoid_unnecessary_containers
           Container(
+            padding:const EdgeInsets.all(10),
             child: TableCalendar(
               locale: "en_US",
               rowHeight: 43,

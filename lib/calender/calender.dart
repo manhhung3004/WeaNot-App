@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:weather_app/models/constants.dart';
 class Calender extends StatefulWidget {
@@ -27,12 +28,13 @@ class _CalenderState extends State<Calender> {
   }
   Widget content(){
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
-          Text("Selected Day = ${today.toString().split("")[0]}"),
+          const SizedBox(height: 10,),
+          Text("Today ${DateFormat('dd/MM/yyyy').format(today)}"),
           Container(
-            padding:const EdgeInsets.all(10),
+            padding:const EdgeInsets.only(bottom: 10),
             child: TableCalendar(
               locale: "en_US",
               rowHeight: 43,
@@ -44,6 +46,8 @@ class _CalenderState extends State<Calender> {
               lastDay: DateTime.utc(2030, 3, 14),
               onDaySelected: _onDaySelected,
             ),
+          ),
+          ListView(
           )
         ],
       ),

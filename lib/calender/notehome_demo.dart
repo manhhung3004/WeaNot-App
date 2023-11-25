@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/calender/Note_Editor_Demo.dart';
@@ -14,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection("notes").where("user",isEqualTo:"hungphung842003@gmail.com").snapshots(),
+              stream: FirebaseFirestore.instance.collection("notes").where("user",isEqualTo: userMail).snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
               if(snapshot.connectionState == ConnectionState.waiting){
                 return const Center(

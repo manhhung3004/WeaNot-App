@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/models/app_style.dart';
 
 Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc ){
+  print(doc);
   return InkWell(
     onTap: onTap,
     child: Container(
@@ -20,13 +21,13 @@ Widget noteCard(Function()? onTap, QueryDocumentSnapshot doc ){
             style: AppStyle.mainTitle,
           ),
           const SizedBox(height: 8.0,),
-          Text(
-            doc["creation_date"],
-            style: AppStyle.dateTitle,
-          ),
+         Text(
+           doc["Creation_Date"],
+           style: AppStyle.dateTitle),
+          const SizedBox(height: 8.0,),
           Text(
             doc["note_content"],
-            style: AppStyle.mainTitle,
+            style: AppStyle.mainContent,
             overflow: TextOverflow.ellipsis,
           ),
         ],

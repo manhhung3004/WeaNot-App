@@ -198,13 +198,13 @@ class _LoginPageState extends State<LoginPage> {
     try {
       String email = _emailController.text;
       String password = _passwordController.text;
-      bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+     /* bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$')
           .hasMatch(email);
       if (email.isEmpty || password.isEmpty && isValid == true) {
         showCupertinoDialog();
         return;
       }
-      await FirebaseAuth.instance
+      */await FirebaseAuth.instance
           .signInWithEmailAndPassword(
         email: email,
         password: password,

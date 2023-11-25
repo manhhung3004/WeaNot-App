@@ -1,5 +1,6 @@
   import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/Note/note.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,7 @@ class _NotePageState extends State<NotePage> {
   void initState() {
     super.initState();
     filteredNotes = sampleNotes;
+
   }
 
   List<Note> sortNotesByModifiedTime(List<Note> notes) {
@@ -265,10 +267,6 @@ void shareNote(Note note) {
   String text = '${note.title}\n\n${note.content}';
   Share.share(text);
 }
-void saveNoteToFirebase(Note note){
-
-}
-
 Future<dynamic> confirmDialog(BuildContext context) {
   return showDialog(
       context: context,

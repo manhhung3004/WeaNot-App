@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/calender/calender.dart';
 import 'package:weather_app/Note/notepage.dart';
+import 'package:weather_app/calender/notehome_demo.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/welcome.dart';
 
@@ -120,7 +121,7 @@ class _Dashboard extends State<Dashboard> {
                       return InkWell(
                         onTap: () {
                           switch(titles[index]){
-                            case "Note": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const NotePage()));
+                            case "Note": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const HomeScreen()));
                             case "Weather": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
                             case "Schedule": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Calender()));
                           }

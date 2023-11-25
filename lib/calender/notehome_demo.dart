@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection("notes").snapshots(),
+              stream: FirebaseFirestore.instance.collection("notes").where("user",isEqualTo:"hungphung842003@gmail.com").snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot){
               if(snapshot.connectionState == ConnectionState.waiting){
                 return const Center(

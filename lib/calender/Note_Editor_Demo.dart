@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/app_style.dart';
 
@@ -14,6 +15,7 @@ class NoteEditorScreen extends StatefulWidget {
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
   int color_id = Random().nextInt(AppStyle.cardsColor.length);
   String date = DateTime.now().toString();
+  String? user = FirebaseAuth.instance.currentUser?.email;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _mainController = TextEditingController();
   @override
@@ -40,8 +42,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             style: AppStyle.mainTitle,
           ),
           const SizedBox(height: 8.0,),
-          Text(date, style: AppStyle.dateTitle,),
-          const SizedBox(height: 28.0,),
+        //  Text(date, style: AppStyle.dateTitle,),
+        //  const SizedBox(height: 28.0,),
 
           TextField(
             controller: _mainController,
@@ -58,14 +60,15 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppStyle.accentColor,
         onPressed: () async{
-          FirebaseFirestore.instance.collection("notes").add({
+            FirebaseFirestore.instance.collection("notes").add({
             "note_title": _titleController.text,
-            "creation_title": date,
+            "Creation_Date": date,
             "note_content": _mainController.text,
-            "color_id": color_id
+            "color_id": color_id,
+              "user": user,
           }).then((value) {
             Navigator.pop(context);
-          });
+          }).catchError((error) => print("failed to add new Note due to $error"));
         },
         child: const Icon(Icons.save),
       ),

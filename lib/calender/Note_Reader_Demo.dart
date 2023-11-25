@@ -29,10 +29,10 @@ class _NoteReaderScreenState extends State<NoteReaderScreen> {
               style: AppStyle.mainTitle,
             ),
             const SizedBox(height: 28.0,),
-            Text(
-              widget.doc["creation_date"],
-              style: AppStyle.dateTitle,
-            ),
+          //  Text(
+           //   widget.doc["Creation_Date"],
+           //   style: AppStyle.dateTitle,
+          //  ),
             Text(
               widget.doc["note_content"],
               style: AppStyle.mainTitle,

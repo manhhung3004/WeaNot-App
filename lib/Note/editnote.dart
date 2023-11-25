@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'note.dart';
@@ -13,6 +14,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
+  String date = DateTime.now().toString();
 
   @override
   void initState() {
@@ -22,6 +24,9 @@ class _EditScreenState extends State<EditScreen> {
     }
 
     super.initState();
+  }
+  void saveNoteToFirebase(Note note) {
+
   }
 
   @override
@@ -86,9 +91,14 @@ class _EditScreenState extends State<EditScreen> {
         ]),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(
-              context, [_titleController.text, _contentController.text]);
+        onPressed: ()  async{
+          FirebaseFirestore.instance.collection("notes").add({
+            "note_title": _titleController.text,
+            "creation_title": date,
+            "note_content": _contentController.text,
+          }).then((value) {
+            Navigator.pop(context);
+          });
         },
         elevation: 10,
         backgroundColor: const Color.fromARGB(255, 95, 95, 95),

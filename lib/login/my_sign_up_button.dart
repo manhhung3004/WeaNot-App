@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/models/constants.dart';
 
 // ignore: camel_case_types
 class button_login extends StatelessWidget {
@@ -7,6 +8,7 @@ class button_login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Constants myContants = Constants();
     return GestureDetector(
       onTap: (){
         onTap();
@@ -15,7 +17,7 @@ class button_login extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(25),
         margin: const EdgeInsets.symmetric(horizontal: 25),
-        decoration: BoxDecoration(color: Colors.blue,
+        decoration: BoxDecoration(color: myContants.secondaryColor,
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Center(

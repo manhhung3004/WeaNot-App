@@ -57,10 +57,10 @@ class _Dashboard extends State<Dashboard> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Profile()));
                             },
                           child: Container(
-                            height: 40,
-                            width: 40,
+                            height: 50,
+                            width: 50,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(30),
                               color: Colors.white,
                               image: const DecorationImage(image: AssetImage("assets/profile.png")),
                             ),
@@ -146,6 +146,7 @@ class _Dashboard extends State<Dashboard> {
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
+                                color: Colors.white
                               ),)
                             ],
                           )

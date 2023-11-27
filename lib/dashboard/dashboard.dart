@@ -121,7 +121,7 @@ class _Dashboard extends State<Dashboard> {
                       return InkWell(
                         onTap: () {
                           switch(titles[index]){
-                            case "Note": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const HomeScreen()));
+                            case "Note": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const NotePage()));
                             case "Weather": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
                             case "Schedule": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Calender()));
                           }

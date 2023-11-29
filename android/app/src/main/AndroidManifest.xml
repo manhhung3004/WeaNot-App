@@ -2,9 +2,9 @@
 
 <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="weather_app"
+        android:label="WeaPlan"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/weather_day">
         <activity
             android:name=".MainActivity"
             android:exported="true"

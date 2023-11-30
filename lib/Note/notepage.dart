@@ -1,12 +1,12 @@
 import 'dart:math';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/constants.dart';
-import 'package:weather_app/models/note.dart';
+import 'package:weather_app/Note/note.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/constants/colors.dart';
-import 'package:weather_app/screen/editnote.dart';
+import 'package:weather_app/models/colors.dart';
+import 'package:weather_app/Note/editnote.dart';
 import 'package:share/share.dart';
+import 'package:weather_app/models/constants.dart';
 
 class NotePage extends StatefulWidget {
   const NotePage({Key? key}) : super(key: key);
@@ -18,11 +18,13 @@ class NotePage extends StatefulWidget {
 class _NotePageState extends State<NotePage> {
   List<Note> filteredNotes = [];
   bool sorted = false;
+  Constants myContants = Constants();
 
   @override
   void initState() {
     super.initState();
     filteredNotes = sampleNotes;
+
   }
 
   List<Note> sortNotesByModifiedTime(List<Note> notes) {
@@ -31,9 +33,7 @@ class _NotePageState extends State<NotePage> {
     } else {
       notes.sort((b, a) => a.modifiedTime.compareTo(b.modifiedTime));
     }
-
     sorted = !sorted;
-
     return notes;
   }
 
@@ -65,42 +65,49 @@ class _NotePageState extends State<NotePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      appBar: AppBar(
+        backgroundColor: myContants.secondaryColor,
+        title: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            "Notes",
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                filteredNotes = sortNotesByModifiedTime(filteredNotes);
+              });
+            },
+            icon: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: const Icon(
+                Icons.sort,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
         child: Column(
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // Set children for Row
               children: [
-                const Text(
-                  'Notes',
-                  style: TextStyle(
-                      fontSize: 30, color: Color.fromARGB(255, 150, 150, 150)),
-                ),
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        filteredNotes = sortNotesByModifiedTime(filteredNotes);
-                      });
-                    },
-                    padding: const EdgeInsets.all(0),
-                    icon: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 199, 199, 199)
-                              .withOpacity(.8),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: const Icon(
-                        Icons.sort,
-                        color: Colors.white,
-                      ),
-                    ))
+                SizedBox(
+                  width: 0,
+                )
               ],
-            ),
-            const SizedBox(
-              height: 20,
             ),
             TextField(
               onChanged: onSearchTextChanged,
@@ -114,7 +121,7 @@ class _NotePageState extends State<NotePage> {
                   Icons.search,
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
-                fillColor: Color.fromARGB(199, 199, 199, 199),
+                fillColor: const Color(0xff90B2F8),
                 filled: true,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -126,9 +133,13 @@ class _NotePageState extends State<NotePage> {
                 ),
               ),
             ),
+            const SizedBox(
+              width: 10,
+              height: 10,
+            ),
             Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 0),
                 itemCount: filteredNotes.length,
                 itemBuilder: (context, index) {
                   return Card(
@@ -152,13 +163,11 @@ class _NotePageState extends State<NotePage> {
                             setState(() {
                               int originalIndex =
                                   sampleNotes.indexOf(filteredNotes[index]);
-
                               sampleNotes[originalIndex] = Note(
                                   id: sampleNotes[originalIndex].id,
                                   title: result[0],
                                   content: result[1],
                                   modifiedTime: DateTime.now());
-
                               filteredNotes[index] = Note(
                                   id: filteredNotes[index].id,
                                   title: result[0],
@@ -173,7 +182,7 @@ class _NotePageState extends State<NotePage> {
                           text: TextSpan(
                               text: '${filteredNotes[index].title} \n',
                               style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.black54,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
                                   height: 1.5),
@@ -181,7 +190,7 @@ class _NotePageState extends State<NotePage> {
                                 TextSpan(
                                   text: filteredNotes[index].content,
                                   style: const TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.black54,
                                       fontWeight: FontWeight.normal,
                                       fontSize: 14,
                                       height: 1.5),
@@ -192,10 +201,10 @@ class _NotePageState extends State<NotePage> {
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             'Edited: ${DateFormat('dd/MM/yyyy').format(filteredNotes[index].modifiedTime)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 10,
                               fontStyle: FontStyle.italic,
-                              color: Colors.grey.shade800,
+                              color: Colors.black87,
                             ),
                           ),
                         ),
@@ -209,7 +218,10 @@ class _NotePageState extends State<NotePage> {
                                   // Gọi hàm chia sẻ khi nút "Share" được nhấn
                                   shareNote(filteredNotes[index]);
                                 },
-                                icon: const Icon(Icons.share),
+                                icon: const Icon(
+                                  Icons.share,
+                                  color: Color(0xff90B2F8),
+                                ),
                               ),
                               IconButton(
                                 onPressed: () async {
@@ -218,7 +230,10 @@ class _NotePageState extends State<NotePage> {
                                     deleteNote(index);
                                   }
                                 },
-                                icon: const Icon(Icons.delete),
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Color(0xff90B2F8),
+                                ),
                               ),
                             ],
                           ),
@@ -253,7 +268,7 @@ class _NotePageState extends State<NotePage> {
           }
         },
         elevation: 10,
-        backgroundColor: Colors.grey.shade800,
+        backgroundColor: const Color(0xff90B2F8),
         child: const Icon(
           Icons.add,
           size: 38,
@@ -267,50 +282,29 @@ void shareNote(Note note) {
   String text = '${note.title}\n\n${note.content}';
   Share.share(text);
 }
-
 Future<dynamic> confirmDialog(BuildContext context) {
   return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.grey.shade900,
-          icon: const Icon(
-            Icons.info,
-            color: Colors.grey,
-          ),
-          title: const Text(
-            'Are you sure you want to delete?',
-            style: TextStyle(color: Colors.white),
-          ),
-          content:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            ElevatedButton(
+        return CupertinoAlertDialog(
+          title: const Text('Are you sure you want to delete?'),
+          content: const Text('Please confirm'),
+          actions: <Widget>[
+            TextButton(
                 onPressed: () {
                   Navigator.pop(context, true);
                 },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const SizedBox(
-                  width: 60,
-                  child: Text(
-                    'Yes',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const SizedBox(
-                  width: 60,
-                  child: Text(
-                    'No',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )),
-          ]),
+                child: const Text('Yes')),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: const Text('No'),
+            )
+          ],
         );
       });
 }

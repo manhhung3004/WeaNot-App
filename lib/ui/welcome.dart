@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/Note/notepage.dart';
+import 'package:weather_app/calender/calender.dart';
+import 'package:weather_app/calender/notehome_demo.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/home.dart';
@@ -16,16 +19,44 @@ class _WelcometState extends State<Welcome> {
     List<City> cities =
         City.citiesList.where((city) => city.isDefault == false).toList();
     List<City> selectedcities = City.getSelectedCities();
-
     Constants myConstans = Constants();
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        automaticallyImplyLeading: false,
         backgroundColor: myConstans.secondaryColor,
+        automaticallyImplyLeading: false,
         title: Text('${selectedcities.length} selected'),
+        elevation: 0.0,
+        actions: [
+          PopupMenuButton(itemBuilder: (context) {
+            return [
+              const PopupMenuItem<int>(
+                value: 0,
+                child: Text("Weather"),
+              ),
+              const PopupMenuItem<int>(
+                value: 1,
+                child: Text("Take Note"),
+              ),
+              const PopupMenuItem<int>(
+                value: 2,
+                child: Text("Calender"),
+              ),
+            ];
+          }, onSelected: (value) {
+            if (value == 0) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Home()));
+            } else if (value == 1) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
+            } else if (value == 2) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Calender()));
+            }
+          }),
+        ],
       ),
       body: ListView.builder(
           itemCount: cities.length,

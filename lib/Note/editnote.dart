@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../models/note.dart';
+import 'note.dart';
 
 class EditScreen extends StatefulWidget {
   final Note? note;
@@ -13,6 +14,7 @@ class EditScreen extends StatefulWidget {
 class _EditScreenState extends State<EditScreen> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _contentController = TextEditingController();
+  String date = DateTime.now().toString();
 
   @override
   void initState() {
@@ -20,46 +22,28 @@ class _EditScreenState extends State<EditScreen> {
       _titleController = TextEditingController(text: widget.note!.title);
       _contentController = TextEditingController(text: widget.note!.content);
     }
-
     super.initState();
+  }
+  void saveNoteToFirebase(Note note) {
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      appBar: AppBar(
+        title: const Text("Create node"),
+        backgroundColor: const Color(0xff90B2F8),
+      ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
+        padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
         child: Column(children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  padding: const EdgeInsets.all(0),
-                  icon: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color:
-                            Color.fromARGB(255, 207, 207, 207).withOpacity(.8),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Colors.white,
-                    ),
-                  ))
-            ],
-          ),
           Flexible(
               child: ListView(
             children: [
               TextField(
                 controller: _titleController,
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 130, 130, 130), fontSize: 30),
+                style: const TextStyle(color: Colors.black87, fontSize: 30),
                 maxLines: null,
                 decoration: const InputDecoration(
                     border: InputBorder.none,
@@ -71,7 +55,7 @@ class _EditScreenState extends State<EditScreen> {
               TextField(
                 controller: _contentController,
                 style: const TextStyle(
-                  color: Color.fromARGB(255, 100, 100, 100),
+                  color: Colors.black87,
                 ),
                 maxLines: null,
                 decoration: const InputDecoration(
@@ -86,12 +70,17 @@ class _EditScreenState extends State<EditScreen> {
         ]),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(
-              context, [_titleController.text, _contentController.text]);
+        onPressed: ()  async{
+          FirebaseFirestore.instance.collection("notes").add({
+            "note_title": _titleController.text,
+            "creation_title": date,
+            "note_content": _contentController.text,
+          }).then((value) {
+            Navigator.pop(context);
+          });
         },
-        elevation: 10,
-        backgroundColor: const Color.fromARGB(255, 95, 95, 95),
+        elevation: 0,
+        backgroundColor: const Color(0xff90B2F8),
         child: const Icon(Icons.save),
       ),
     );

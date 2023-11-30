@@ -1,58 +1,99 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
+import 'package:weather_app/Clipper/clipper.dart';
+import 'package:weather_app/dashboard/dashboard.dart';
 import 'package:weather_app/login/square.dart';
 import 'package:weather_app/login/text_fill.dart';
+import 'package:weather_app/login/sign_up.dart';
+import 'forget_password.dart';
 import 'my_button.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
-class _LoginPageState extends State<LoginPage> {
 
-  final FirebaseAuthService _auth = FirebaseAuthService();
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // logo
-              const Icon(
-                Icons.lock,
-                size: 70,
+              Stack(
+                children: [
+                  CustomPaint(
+                    size: Size(MediaQuery.of(context).size.width, 200),
+                    painter: RPSCustomPainter(),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 0,
+                    child: CustomPaint(
+                      size: Size(MediaQuery.of(context).size.width, 200),
+                      painter: RPSCustomPainter(),
+                    ),
+                  ),
+                  Positioned(
+                    top: 140,
+                    left: 30,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Login",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 26,
+                          ),
+                        ),
+                        const SizedBox(height: 12,),
+                        Text(
+                          'Welcome back you\'ve been missed!',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
               ),
               // welcome back, you've been missed!
-              Text(
-                'Welcome back you\'ve been missed!',
-                style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 16,
-                ),
-              ),
               // username textfield
               MyTextField(
                 controller: _emailController,
                 hintText: 'Username',
                 obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
               ),
               // password textfield
               MyTextField(
                 controller: _passwordController,
                 hintText: 'Password',
                 obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
               ),
               // forgot password?
               Padding(
@@ -60,9 +101,22 @@ class _LoginPageState extends State<LoginPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ForgetPassword()),
+                            );
+                          },
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -70,6 +124,7 @@ class _LoginPageState extends State<LoginPage> {
               // sign in button
               MyButton(
                 onTap: _signIn,
+                child: const Text("sign in"),
               ),
               // or continue with
               Padding(
@@ -118,13 +173,18 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
-                  const Text(
-                    'Register now',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUp()));
+                      },
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.bold),
+                      )),
                 ],
               )
             ],
@@ -133,13 +193,92 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   void _signIn() async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
-    if(user != null){
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, "/Home");
+    try {
+      String email = _emailController.text;
+      String password = _passwordController.text;
+     /* bool isValid = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$')
+          .hasMatch(email);
+      if (email.isEmpty || password.isEmpty && isValid == true) {
+        showCupertinoDialog();
+        return;
+      }
+      */await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      )
+          .then((value) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => const Dashboard()),
+            (Route<dynamic> route) => false);
+      });
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          wrongAccount();
+          _emailController.clear();
+          _passwordController.clear();
+          break;
+        case 'wrong-password':
+          wrongAccount();
+          _emailController.clear();
+          _passwordController.clear();
+          break;
+        default:
+          wrongAccount();
+          _emailController.clear();
+          _passwordController.clear();
+          break;
+      }
+    } catch (e) {
+      // Handle any other general exceptions
+      _emailController.clear();
+      _passwordController.clear();
+      wrongAccount();
+    }
   }
-}
+
+  // hiển thị khi không nhập mật khẩu tài khoảng
+  void showCupertinoDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: const Text('Emtple your email or password!!!'),
+            content: const Text('Please try again!'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    _dismissDialog();
+                  },
+                  child: const Text('Close'))
+            ],
+          );
+        });
+  }
+
+  _dismissDialog() {
+    Navigator.pop(context);
+  }
+
+  // Hiển thị thông báo khi sai mật khẩu tài khoản
+  void wrongAccount() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: const Text('Wrong your email or password!!!'),
+            content: const Text('Please try again!'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    _dismissDialog();
+                  },
+                  child: const Text('Close'))
+            ],
+          );
+        });
+  }
 }

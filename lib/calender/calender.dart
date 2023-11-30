@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -9,6 +10,10 @@ class Calender extends StatefulWidget {
 }
 
 class _CalenderState extends State<Calender> {
+  @override
+  void initState(){
+    super.initState();
+  }
   DateTime today = DateTime.now();
   void _onDaySelected(DateTime day, DateTime focusedDay){
     setState(() {
@@ -28,7 +33,7 @@ class _CalenderState extends State<Calender> {
   }
   Widget content(){
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(0),
       child: Column(
         children: [
           const SizedBox(height: 10,),
@@ -47,8 +52,63 @@ class _CalenderState extends State<Calender> {
               onDaySelected: _onDaySelected,
             ),
           ),
-          // ListView(
-          // )
+          // Tast list
+          Container(
+            padding:const EdgeInsets.only(left: 30),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height*0.419,
+            decoration:const BoxDecoration(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight:  Radius.circular(50)),
+              color: Color(0xff30384C),
+            ),
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Padding( padding: EdgeInsets.only(top: 50),
+                    child:  Text("Today" , style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold
+                    ),),),
+                    Container(
+                      padding:const EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            CupertinoIcons.check_mark_circled_solid,
+                            color: Color(0xff00cf8d),
+                            size: 30,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            width: MediaQuery.of(context).size.width*0.8,
+                            child:  Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                const Text("Title", style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                                ),),
+                                const SizedBox(height: 10,),
+                                Text("Description", style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.white.withOpacity(0.6)
+                                ),),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          )
         ],
       ),
     );

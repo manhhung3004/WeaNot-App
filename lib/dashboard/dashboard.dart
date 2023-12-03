@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/calender/calender.dart';
 import 'package:weather_app/Note/notepage.dart';
-import 'package:weather_app/calender/notehome_demo.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/ui/welcome.dart';
 

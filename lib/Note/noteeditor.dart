@@ -8,6 +8,7 @@ import 'package:weather_app/models/constants.dart';
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen({super.key});
 
+
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
 }
@@ -65,7 +66,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ],),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppStyle.accentColor,
+        backgroundColor:myContants.primaryColor,
         onPressed: () async{
             FirebaseFirestore.instance.collection("notes").add({
             "note_title": _titleController.text,

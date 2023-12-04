@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/calender/Note_Editor_Demo.dart';
-import 'package:weather_app/calender/Note_Reader_Demo.dart';
-import 'package:weather_app/calender/note_card_demo.dart';
+import 'package:weather_app/Note/noteeditor.dart';
+import 'package:weather_app/Note/notereader.dart';
+import 'package:weather_app/Note/notecard.dart';
 import 'package:weather_app/models/constants.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -58,7 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // Set children for Row
               children: [
                 SizedBox(
                   width: 0,
@@ -141,6 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         label: const Text("Add Note"),
         icon: const Icon(Icons.add),
+        backgroundColor: myContants.secondaryColor,
       ),
     );
   }

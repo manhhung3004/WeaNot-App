@@ -1,23 +1,9 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
-import 'dart:math' as math;
-
-Color generateRandomColor() {
-  final random = math.Random();
-  const int maxBrightness = 250; // Adjust this value for desired brightness
-
-  int generateRandomRGBValue() {
-    return random.nextInt(maxBrightness);
-  }
-
-  int r = generateRandomRGBValue();
-  int g = generateRandomRGBValue();
-  int b = generateRandomRGBValue();
-  return Color.fromARGB(255, r, g, b);
-}
 
 Widget noteCard(
     Function()? onTap, QueryDocumentSnapshot doc, BuildContext context) {
@@ -25,7 +11,7 @@ Widget noteCard(
     padding: const EdgeInsets.only(top: 10.0, bottom: 10),
     child: Container(
       decoration: BoxDecoration(
-          color: generateRandomColor(),
+          color: Color(Random().nextInt(0xffffffff)).withOpacity(0.30),
           borderRadius: BorderRadius.circular(10)),
       child: InkWell(
         onTap: onTap,
@@ -55,7 +41,7 @@ Widget noteCard(
                   ),
                   Text(
                     DateFormat('MM/dd/yy HH:mm:ss')
-                  .format(DateTime.parse(doc["Creation_Date"])),
+                        .format(DateTime.parse(doc["Creation_Date"])),
                     style: const TextStyle(
                       fontSize: 10,
                       fontStyle: FontStyle.italic,
@@ -65,15 +51,26 @@ Widget noteCard(
                   const SizedBox(
                     height: 8.0,
                   ),
-                  Text(
-                    doc["note_content"],
-                    style: const TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14,
-                      height: 1.5,
+                  Container(
+                    constraints:const BoxConstraints(
+                      maxWidth: 200, // Đặt chiều rộng tối đa của văn bản
                     ),
-                    overflow: TextOverflow.ellipsis,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            doc["note_content"],
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 14,
+                              height: 1.5,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

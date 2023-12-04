@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/models/constants.dart';
-import 'package:weather_app/ui/weather_item.dart';
-import 'package:weather_app/ui/welcome.dart';
+import 'package:weather_app/weather/weather_item.dart';
+import 'package:weather_app/weather/welcome.dart';
 
 class DetailPage extends StatefulWidget {
   final List consolidatedWeatherList;

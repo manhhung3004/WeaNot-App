@@ -3,7 +3,7 @@ import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/calender/calender.dart';
 import 'package:weather_app/Note/notehome.dart';
 import 'package:weather_app/models/constants.dart';
-import 'package:weather_app/ui/welcome.dart';
+import 'package:weather_app/weather/welcome.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);

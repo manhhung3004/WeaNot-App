@@ -1,13 +1,13 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/app_style.dart';
 import 'package:weather_app/models/constants.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen({super.key});
-
 
   @override
   State<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -36,8 +36,8 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(backgroundColor: myContants.secondaryColor,
       elevation: 0.0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text("Add a new Note", style: TextStyle(color: Colors.black)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text("Add a new Note", style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -68,6 +68,9 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor:myContants.primaryColor,
         onPressed: () async{
+          if(_titleController.text.isEmpty || _mainController.text.isEmpty){
+            await confirmDialog(context);
+          }else{
             FirebaseFirestore.instance.collection("notes").add({
             "note_title": _titleController.text,
             "Creation_Date": date,
@@ -76,11 +79,32 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               "user": user,
           }).then((value) {
             Navigator.pop(context);
-          // ignore: invalid_return_type_for_catch_error
           });
+          }
         },
         child: const Icon(Icons.save),
       ),
     );
   }
+  Future<dynamic> confirmDialog(BuildContext context) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text('Title or content is empty!!!!!!'),
+          content: const Text('Please confirm'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: const Text('confirm'),
+            )
+          ],
+        );
+      });
+}
 }

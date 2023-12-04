@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:weather_app/calender/events.dart';
+import 'package:weather_app/models/constants.dart';
 
 class Calender extends StatefulWidget {
   const Calender({super.key});
@@ -9,146 +9,138 @@ class Calender extends StatefulWidget {
   State<Calender> createState() => _CalenderState();
 }
 
-Container taskList(
-    String title, String desscription, IconData iconImg, Color iconColor) {
-  return Container(
-    padding: const EdgeInsets.only(top: 10),
-    child: Row(
-      children: [
-        Icon(
-          iconImg,
-          color: const Color(0xff00cf8d),
-          size: 30,
-        ),
-        Container(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Text(
-                desscription,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white.withOpacity(0.6),
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
-    ),
-  );
-}
-
 class _CalenderState extends State<Calender> {
+  Constants myContants = Constants();
+  late Map<DateTime, List<Event>> selectedEvents;
+  CalendarFormat format = CalendarFormat.month;
+  DateTime selectedDay = DateTime.now();
+  DateTime focusDay = DateTime.now();
+
+  final TextEditingController _evenController = TextEditingController();
+
   @override
   void initState() {
+    selectedEvents = {};
     super.initState();
   }
 
-  DateTime today = DateTime.now();
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      today = day;
-    });
+  List<Event> _getEventsfromDay(DateTime date) {
+    return selectedEvents[date] ?? [];
+  }
+
+  @override
+  void dispose() {
+    _evenController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Constants myContants = Constants();
-    // Get the screen size
+    Constants myContants = Constants();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: myContants.primaryColor,
         title: const Text("Calender"),
       ),
-      body: content(),
-    );
-  }
-
-  Widget content() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(0),
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-                child: Text(
-              "Today ${DateFormat('dd/MM/yyyy').format(today)}",
-            )),
-            Container(
-              // height: MediaQuery.of(context).size.height * 0.30,
-              padding: const EdgeInsets.only(bottom: 0),
-              child: TableCalendar(
-                locale: "en_US",
-                rowHeight: 43,
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                ),
-                availableGestures: AvailableGestures.all,
-                selectedDayPredicate: (day) => isSameDay(day, today),
-                focusedDay: today,
-                firstDay: DateTime.utc(2010, 10, 16),
-                lastDay: DateTime.utc(2030, 3, 14),
-                onDaySelected: _onDaySelected,
-              ),
-            ),
-            // Task list
-            Container(
-              padding: const EdgeInsets.only(left: 30),
-              width: MediaQuery.of(context ).size.width,
-              height: MediaQuery.of(context ).size.height * 0.37,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
-                ),
-                color: const Color.fromARGB(255, 0, 135, 245).withOpacity(0.76),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          "Today",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Card(
+              clipBehavior: Clip.antiAlias,
+              margin: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  TableCalendar(
+                    firstDay: DateTime(1990),
+                    lastDay: DateTime(2030),
+                    focusedDay: DateTime.now(),
+                    weekendDays: const [6],
+                    calendarFormat: format,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    onDaySelected: (DateTime selectDay, DateTime date) {
+                      setState(() {
+                        selectedDay = selectDay;
+                        focusDay = focusDay;
+                      });
+                    },
+                    onFormatChanged: (CalendarFormat format) {
+                      setState(() {
+                        format = format;
+                      });
+                    },
+                    selectedDayPredicate: (DateTime date) {
+                      return isSameDay(selectedDay, date);
+                    },
+                    eventLoader: _getEventsfromDay,
+                    headerStyle: HeaderStyle(
+                        decoration: BoxDecoration(
+                          color: myContants.primaryColor,
                         ),
-                      ),
-                      taskList("Task 1", "Desscription", CupertinoIcons.check_mark_circled_solid,const Color(0xff00cf8c)),
-                      taskList("Task 2", "Desscription", CupertinoIcons.checkmark_circle_fill, const  Color.fromARGB(255, 83, 207, 0)),
-                    ],
-                  )
+                        headerMargin: const EdgeInsets.only(bottom: 8.0),
+                        titleTextStyle: const TextStyle(
+                          color: Colors.white,
+                        ),
+                        formatButtonDecoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        formatButtonTextStyle: const TextStyle(color: Colors.white),
+                        leftChevronIcon: const Icon(
+                          Icons.chevron_left,
+                          color: Colors.white,
+                        ),
+                        rightChevronIcon: const Icon(
+                          Icons.chevron_right,
+                          color: Colors.white,
+                        )),
+                    calendarStyle: const CalendarStyle(outsideDaysVisible: false),
+                    calendarBuilders: const CalendarBuilders(),
+                  ),
+                  ... _getEventsfromDay(selectedDay).map((Event event) => ListTile(title: Text(event.title),))
                 ],
               ),
             )
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add_alert),
+          onPressed: () => showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: const Text("Add Event"),
+                    content: TextFormField(
+                      controller: _evenController,
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            if (_evenController.text.isEmpty) {
+                              Navigator.pop(context);
+                              return;
+                            } else {
+                              if (selectedEvents[selectedDay] != null) {
+                                selectedEvents[selectedDay]
+                                    ?.add(Event(title: _evenController.text));
+                              } else {
+                                selectedEvents[selectedDay] = [
+                                  Event(title: _evenController.text)
+                                ];
+                              }
+                            }
+                            Navigator.pop(context);
+                              _evenController.clear();
+                              setState(() {
+                              });
+                              return;
+                          },
+                          child: const Text("Ok")),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Cancel"),
+                      ),
+                    ],
+                  ))),
     );
   }
 }

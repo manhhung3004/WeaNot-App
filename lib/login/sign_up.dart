@@ -5,7 +5,7 @@ import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/login.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
-import 'package:weather_app/ui/home.dart';
+import 'package:weather_app/weather/home.dart';
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
   @override

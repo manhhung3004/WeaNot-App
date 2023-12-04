@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/ui/detail_page.dart';
-import 'package:weather_app/ui/weather_item.dart';
+import 'package:weather_app/weather/detail_page.dart';
+import 'package:weather_app/weather/weather_item.dart';
 import 'package:http/http.dart' as http;
 import 'dart:core';
 

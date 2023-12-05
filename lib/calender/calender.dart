@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:weather_app/calender/events.dart';
 import 'package:weather_app/models/constants.dart';
@@ -17,6 +18,8 @@ class _CalenderState extends State<Calender> {
   DateTime focusDay = DateTime.now();
 
   final TextEditingController _evenController = TextEditingController();
+
+  final bool check = false;
 
   @override
   void initState() {
@@ -37,6 +40,7 @@ class _CalenderState extends State<Calender> {
   @override
   Widget build(BuildContext context) {
     Constants myContants = Constants();
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: myContants.primaryColor,
@@ -84,7 +88,8 @@ class _CalenderState extends State<Calender> {
                         formatButtonDecoration: BoxDecoration(
                             border: Border.all(color: Colors.white),
                             borderRadius: BorderRadius.circular(8.0)),
-                        formatButtonTextStyle: const TextStyle(color: Colors.white),
+                        formatButtonTextStyle:
+                            const TextStyle(color: Colors.white),
                         leftChevronIcon: const Icon(
                           Icons.chevron_left,
                           color: Colors.white,
@@ -93,10 +98,77 @@ class _CalenderState extends State<Calender> {
                           Icons.chevron_right,
                           color: Colors.white,
                         )),
-                    calendarStyle: const CalendarStyle(outsideDaysVisible: false),
+                    calendarStyle:
+                        const CalendarStyle(outsideDaysVisible: false),
                     calendarBuilders: const CalendarBuilders(),
                   ),
-                  ... _getEventsfromDay(selectedDay).map((Event event) => ListTile(title: Text(event.title),))
+                  ..._getEventsfromDay(selectedDay).map((Event event) =>
+                      Container(
+                          margin: const EdgeInsets.only(
+                          left: 10, top: 20, right: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          height: size.height * .08,
+                          width: size.width,
+                          decoration: BoxDecoration(
+                              border: event.checkEvent == true
+                                  ? Border.all(
+                                      color: myContants.secondaryColor
+                                          .withOpacity(0.6),
+                                      width: 2,
+                                    )
+                                  : Border.all(color: Colors.white),
+                                  color: event.checkEvent == true
+                                  ? myContants.primaryColor.withOpacity(0.5)
+                                  : Colors.white,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                    color:
+                                        myContants.primaryColor.withOpacity(.2),
+                                    spreadRadius: 5,
+                                    blurRadius: 7,
+                                    offset: const Offset(0, 3))
+                              ]),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      event.checkEvent = !event.checkEvent;
+                                    });
+                                  },
+                                  child: Image.asset(
+                                    event.checkEvent == true
+                                        ? 'assets/checked.png'
+                                        : 'assets/unchecked.png',
+                                    width: 30,
+                                  )),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                event.title,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: event.checkEvent == true
+                                      ? Colors.black
+                                      : Colors.black54,
+                                ),
+                              ),
+                              Text(
+                                DateFormat('MM/dd/yy HH:mm:ss').format(
+                                    DateTime.parse(event.dateEvent.toString())),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: event.checkEvent == true
+                                      ? Colors.black
+                                      : Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),))
                 ],
               ),
             )
@@ -120,19 +192,23 @@ class _CalenderState extends State<Calender> {
                               return;
                             } else {
                               if (selectedEvents[selectedDay] != null) {
-                                selectedEvents[selectedDay]
-                                    ?.add(Event(title: _evenController.text));
+                                selectedEvents[selectedDay]?.add(Event(
+                                    title: _evenController.text,
+                                    checkEvent: check,
+                                    dateEvent: selectedDay));
                               } else {
                                 selectedEvents[selectedDay] = [
-                                  Event(title: _evenController.text)
+                                  Event(
+                                      title: _evenController.text,
+                                      checkEvent: check,
+                                      dateEvent: selectedDay)
                                 ];
                               }
                             }
                             Navigator.pop(context);
-                              _evenController.clear();
-                              setState(() {
-                              });
-                              return;
+                            _evenController.clear();
+                            setState(() {});
+                            return;
                           },
                           child: const Text("Ok")),
                       TextButton(

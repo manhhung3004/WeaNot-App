@@ -3,8 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/Profile/button_editProfile.dart';
 import 'package:weather_app/login/text_fill.dart';
+
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  // const EditProfile({super.key});
+  final String Name;
+  final String Phone;
+  final String Email;
+  final String Address;
+
+  const EditProfile(
+      {super.key,
+      required this.Name,
+      required this.Phone,
+      required this.Address,
+      required this.Email});
   @override
   State<EditProfile> createState() => _SignUpState();
 }
@@ -22,6 +34,16 @@ class _SignUpState extends State<EditProfile> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    super.initState();
+    _emailController.text = widget.Email;
+    _nameController.text = widget.Name;
+    _phoneController.text = widget.Phone;
+    _addressController.text = widget.Address;
   }
 
   @override
@@ -95,16 +117,6 @@ class _SignUpState extends State<EditProfile> {
               ),
             ),
             const SizedBox(height: 10),
-            // password textfield
-            MyTextField(
-              controller: _passwordController,
-              hintText: 'Password',
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
             const SizedBox(height: 10),
             button_editprofile(onTap: _editprofile),
             const SizedBox(height: 50),
@@ -115,6 +127,60 @@ class _SignUpState extends State<EditProfile> {
   }
 
   void _editprofile() async {
-    // Do not have any thing
+  // Lấy email của người dùng hiện tại
+  String userMail = FirebaseAuth.instance.currentUser!.email.toString();
+
+  // Tạo đối tượng Map chứa các giá trị cần cập nhật
+  Map<String, dynamic> updatedData = {
+    "name": _nameController.text,
+    "phone": _phoneController.text,
+    "address": _addressController.text,
+  };
+  // Gọi hàm để cập nhật dữ liệu lên Firestore
+  try {
+    await updateUserData(userMail, updatedData);
+    // Thông báo cập nhật thành công
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Cập nhật thông tin thành công!"),
+        backgroundColor: Colors.green,
+      ),
+    );
+    Navigator.of(context).pop();
+  } catch (error) {
+    // Thông báo lỗi cập nhật nếu có
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Lỗi cập nhật thông tin: $error"),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
+}
+
+Future<void> updateUserData(
+  String userMail, Map<String, dynamic> updatedData) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("user")
+        .where("username", isEqualTo: userMail)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot randomDoc = querySnapshot.docs[0]; // Cập nhật tài liệu đầu tiên
+
+      // Cập nhật các giá trị từ controllers
+      updatedData["name"] = _nameController.text;
+      updatedData["phone"] = _phoneController.text;
+      updatedData["address"] = _addressController.text;
+
+      await randomDoc.reference.update(updatedData);
+     // print("Đã cập nhật dữ liệu thành công!");
+    } else {
+//print("Không tìm thấy tài liệu phù hợp để cập nhật.");
+    }
+  } catch (error) {
+   // print("Lỗi cập nhật dữ liệu: $error");
+  }
+}
 }

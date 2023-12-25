@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:core';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
   @override
   State<Home> createState() => _HomeState();
 }

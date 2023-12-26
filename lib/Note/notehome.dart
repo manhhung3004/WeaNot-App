@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: const Icon(
                 Icons.sort,
-                color: Colors.white,
+                color: Color.fromARGB(255, 58, 58, 58),
                 size: 30,
               ),
             ),

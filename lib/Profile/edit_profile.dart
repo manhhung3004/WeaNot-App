@@ -49,79 +49,84 @@ class _SignUpState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Center(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 50),
-            Text(
-              'Edit your profile',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 20,
-              ),
-              textAlign: TextAlign.left,
-            ),
-            const SizedBox(height: 25),
-            Text(
-              'Create your profile to start',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 20,
-              ),
-            ),
-            const SizedBox(height: 25),
-            //Name
-            MyTextField(
-              controller: _nameController,
-              hintText: 'Your name',
-              obscureText: false,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // email textfield
-            MyTextField(
-              controller: _emailController,
-              hintText: 'E-Mail',
-              obscureText: false,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            MyTextField(
-              controller: _phoneController,
-              hintText: 'Phone',
-              obscureText: false,
-              decoration: const InputDecoration(
-                labelText: 'Phone',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            //address
-            MyTextField(
-              controller: _addressController,
-              hintText: 'Address',
-              obscureText: false,
-              decoration: const InputDecoration(
-                labelText: 'Address',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const SizedBox(height: 10),
-            button_editprofile(onTap: _editprofile),
-            const SizedBox(height: 50),
-          ],
-        )),
+        child: SingleChildScrollView (
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            // height: MediaQuery.of(context).size.height,
+            child: Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 50),
+                Text(
+                  'Edit your profile',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                const SizedBox(height: 25),
+                Text(
+                  'Create your profile to start',
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 25),
+                //Name
+                MyTextField(
+                  controller: _nameController,
+                  hintText: 'Your name',
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // email textfield
+                MyTextField(
+                  controller: _emailController,
+                  hintText: 'E-Mail',
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                MyTextField(
+                  controller: _phoneController,
+                  hintText: 'Phone',
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                //address
+                MyTextField(
+                  controller: _addressController,
+                  hintText: 'Address',
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Address',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const SizedBox(height: 10),
+                button_editprofile(onTap: _editprofile),
+                const SizedBox(height: 50),
+              ],
+            )),
+          ),
+        ),
       ),
     );
   }
@@ -141,11 +146,12 @@ class _SignUpState extends State<EditProfile> {
     await updateUserData(userMail, updatedData);
     // Thông báo cập nhật thành công
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+    const  SnackBar(
         content: Text("Cập nhật thông tin thành công!"),
         backgroundColor: Colors.green,
       ),
     );
+    maintainState: false;
     Navigator.of(context).pop();
   } catch (error) {
     // Thông báo lỗi cập nhật nếu có

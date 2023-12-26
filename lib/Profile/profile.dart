@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/Profile/edit_profile.dart';
 import 'package:weather_app/login/login.dart';
 import 'package:weather_app/models/constants.dart';
@@ -24,8 +25,8 @@ class _ProfileState extends State<Profile> {
   String address = "";
   @override
   void initState() {
-    super.initState();
     Get_Random_User_With_Matching_Email(userMail!);
+    super.initState();
   }
 
   @override
@@ -43,24 +44,69 @@ class _ProfileState extends State<Profile> {
               radius: 70,
               backgroundImage: const AssetImage('assets/profile.png'),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            itemProfile("Name", name, CupertinoIcons.person),
-            const SizedBox(
-              height: 20,
-            ),
-            itemProfile("Phone", phone, CupertinoIcons.phone),
-            const SizedBox(
-              height: 20,
-            ),
-            itemProfile("Address", address, CupertinoIcons.location),
-            const SizedBox(
-              height: 20,
-            ),
-            itemProfile("Email", email, CupertinoIcons.mail),
-            const SizedBox(
-              height: 20,
+            Expanded(
+              child: FutureBuilder<QuerySnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection("user")
+                    .where("username", isEqualTo: userMail)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                    int randomIndex =
+                        Random().nextInt(snapshot.data!.docs.length);
+                    DocumentSnapshot randomDoc =
+                        snapshot.data!.docs[randomIndex];
+                    Object? userData = randomDoc.data();
+
+                    if (userData != null) {
+                      Map<String, dynamic> userDataMap =
+                          userData as Map<String, dynamic>;
+                      String name = userDataMap["name"];
+                      String phone = userDataMap["phone"];
+                      String email = userDataMap["username"];
+                      String address = userDataMap["address"];
+                      return Column(
+                        children: [
+                          // Text("Tên: $name"),
+                          // Text("Số điện thoại: $phone"),
+                          // Text("Email: $email"),
+                          // Text("Địa chỉ: $address"),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          itemProfile("Name", name, CupertinoIcons.person),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          itemProfile("Phone", phone, CupertinoIcons.phone),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          itemProfile(
+                              "Address", address, CupertinoIcons.location),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          itemProfile("Email", email, CupertinoIcons.mail),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Text("Dữ liệu người dùng không tồn tại.");
+                    }
+                  } else {
+                    return Text("Không tìm thấy tài liệu phù hợp.");
+                  }
+                },
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -154,6 +200,10 @@ class _ProfileState extends State<Profile> {
         phone = userDataMap["phone"];
         email = userDataMap["username"];
         address = userDataMap["address"];
+        print(name);
+        print(phone);
+        print(email);
+        print(address);
       } else {
         // print("Dữ liệu người dùng không tồn tại.");
       }

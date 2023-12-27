@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/Profile/edit_profile.dart';
 import 'package:weather_app/login/login.dart';
 import 'package:weather_app/models/constants.dart';
@@ -32,13 +31,14 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: myContants.primaryColor,
+        title: const Text("Your Profile"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            const SizedBox(
-              height: 20,
-            ),
             CircleAvatar(
               backgroundColor: myContants.secondaryColor.withOpacity(0.2),
               radius: 70,
@@ -73,12 +73,8 @@ class _ProfileState extends State<Profile> {
                       String address = userDataMap["address"];
                       return Column(
                         children: [
-                          // Text("Tên: $name"),
-                          // Text("Số điện thoại: $phone"),
-                          // Text("Email: $email"),
-                          // Text("Địa chỉ: $address"),
                           const SizedBox(
-                            height: 20,
+                            height: 30,
                           ),
                           itemProfile("Name", name, CupertinoIcons.person),
                           const SizedBox(

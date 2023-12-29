@@ -80,7 +80,7 @@ class _Dashboard extends State<Dashboard> {
                               letterSpacing: 1,
                             ),
                           ),
-                          SizedBox( height: 10,),
+                          // SizedBox( height: 10,),
                           Text(
                             "Last Update: .../.../...",
                             style: TextStyle(

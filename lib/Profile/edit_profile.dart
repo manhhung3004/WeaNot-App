@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:weather_app/Profile/button_editProfile.dart';
 import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/models/constants.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class EditProfile extends StatefulWidget {
   // const EditProfile({super.key});
@@ -18,6 +22,9 @@ class EditProfile extends StatefulWidget {
   // ignore: non_constant_identifier_names
   final String Address;
 
+  // ignore: non_constant_identifier_names
+  final String ImageGet;
+
   const EditProfile(
       {super.key,
       // ignore: non_constant_identifier_names
@@ -27,18 +34,27 @@ class EditProfile extends StatefulWidget {
       // ignore: non_constant_identifier_names
       required this.Address,
       // ignore: non_constant_identifier_names
-      required this.Email});
+      required this.Email,
+      // ignore: non_constant_identifier_names
+      required this.ImageGet});
   @override
   State<EditProfile> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<EditProfile> {
+  final FirebaseStorage storage = FirebaseStorage.instance;
+  Uint8List? _images;
+  File? imageFile;
+  XFile? file;
+  ImagePicker? imagePicker;
+  String imageURL = '';
   String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  String Image_get_now = "";
 
   @override
   void dispose() {
@@ -55,8 +71,24 @@ class _SignUpState extends State<EditProfile> {
     _nameController.text = widget.Name;
     _phoneController.text = widget.Phone;
     _addressController.text = widget.Address;
+    Image_get_now = widget.ImageGet;
+  }
+  selectImages(ImageSource source) async {
+    ImagePicker imagePicker = ImagePicker();
+    file = await imagePicker.pickImage(source: source);
+    if (file != null) {
+      return await file?.readAsBytes();
+    }
+    // ignore: avoid_print
+    print("No images to selected");
   }
 
+  void selectimages() async {
+    Uint8List image = await selectImages(ImageSource.gallery);
+    setState(() {
+      _images = image;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Constants myContants = Constants();
@@ -70,29 +102,33 @@ class _SignUpState extends State<EditProfile> {
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            // height: MediaQuery.of(context).size.height,
             child: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(height: 50),
-                Text(
-                  'Edit your profile',
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 20,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                const SizedBox(height: 25),
-                Text(
-                  'Create your profile to start',
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
+                Stack(children: [
+                  _images != null
+                      ? CircleAvatar(
+                          radius: 70,
+                          backgroundImage: MemoryImage(_images!),
+                        )
+                      : CircleAvatar(
+                              backgroundColor:
+                                  myContants.secondaryColor.withOpacity(0.2),
+                              radius: 70,
+                              backgroundImage: NetworkImage(Image_get_now),
+                            ),
+                  Positioned(
+                    bottom: -15,
+                    left: 90,
+                    child: IconButton(
+                      onPressed: selectimages,
+                      icon: const Icon(Icons.add_a_photo),
+                    ),
+                  )
+                ]),
+                const SizedBox(height: 20),
                 //Name
                 MyTextField(
                   controller: _nameController,
@@ -146,6 +182,7 @@ class _SignUpState extends State<EditProfile> {
       ),
     );
   }
+
   void _editprofile() async {
     // Lấy email của người dùng hiện tại
     String userMail = FirebaseAuth.instance.currentUser!.email.toString();
@@ -170,10 +207,10 @@ class _SignUpState extends State<EditProfile> {
       //Navigator.of(context).pop();
       // ignore: use_build_context_synchronously
       await Navigator.pushAndRemoveUntil(
-  context,
-  MaterialPageRoute(builder: (context) => const Profile()),
-  (Route<dynamic> route) => route.settings.name != '/profile',
-);
+        context,
+        MaterialPageRoute(builder: (context) => const Profile()),
+        (Route<dynamic> route) => route.settings.name != '/profile',
+      );
     } catch (error) {
       // Thông báo lỗi cập nhật nếu có
       // ignore: use_build_context_synchronously
@@ -189,24 +226,51 @@ class _SignUpState extends State<EditProfile> {
   Future<void> updateUserData(
       String userMail, Map<String, dynamic> updatedData) async {
     try {
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection("user")
-          .where("username", isEqualTo: userMail)
-          .get();
+      if (file != null) {
+        String uniqueFileName =
+            DateTime.now().microsecondsSinceEpoch.toString();
+        // ignore: non_constant_identifier_names
+        Reference ReferenceRoof = FirebaseStorage.instance.ref();
+        // ignore: non_constant_identifier_names
+        Reference ReferenceDirImages = ReferenceRoof.child('images');
+        //
+        Reference referenceToUpLoad = ReferenceDirImages.child(uniqueFileName);
+        try {
+          await referenceToUpLoad.putFile(File(file!.path));
+          imageURL = await referenceToUpLoad.getDownloadURL();
+        } catch (error) {
+          if (kDebugMode) {
+            print(error);
+          }
+        }
+      }
 
-      if (querySnapshot.docs.isNotEmpty) {
-        DocumentSnapshot randomDoc =
-            querySnapshot.docs[0]; // Cập nhật tài liệu đầu tiên
-
-        // Cập nhật các giá trị từ controllers
-        updatedData["name"] = _nameController.text;
-        updatedData["phone"] = _phoneController.text;
-        updatedData["address"] = _addressController.text;
-
-        await randomDoc.reference.update(updatedData);
-        // print("Đã cập nhật dữ liệu thành công!");
+      if (imageURL.isEmpty) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("plesse upload an images"),
+        ));
       } else {
-//print("Không tìm thấy tài liệu phù hợp để cập nhật.");
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection("user")
+            .where("username", isEqualTo: userMail)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          DocumentSnapshot randomDoc =
+              querySnapshot.docs[0]; // Cập nhật tài liệu đầu tiên
+
+          // Cập nhật các giá trị từ controllers
+          updatedData["name"] = _nameController.text;
+          updatedData["phone"] = _phoneController.text;
+          updatedData["address"] = _addressController.text;
+          updatedData['image'] = imageURL;
+
+          await randomDoc.reference.update(updatedData);
+          // print("Đã cập nhật dữ liệu thành công!");
+        } else {
+          //print("Không tìm thấy tài liệu phù hợp để cập nhật.");
+        }
       }
     } catch (error) {
       // print("Lỗi cập nhật dữ liệu: $error");

@@ -1,9 +1,11 @@
+
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:weather_app/Profile/edit_profile.dart';
 import 'package:weather_app/login/login.dart';
 import 'package:weather_app/models/constants.dart';
@@ -22,6 +24,7 @@ class _ProfileState extends State<Profile> {
   String phone = "";
   String email = "";
   String address = "";
+  String image = "";
   @override
   void initState() {
     Get_Random_User_With_Matching_Email(userMail!);
@@ -39,11 +42,6 @@ class _ProfileState extends State<Profile> {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            CircleAvatar(
-              backgroundColor: myContants.secondaryColor.withOpacity(0.2),
-              radius: 70,
-              backgroundImage: const AssetImage('assets/profile.png'),
-            ),
             Expanded(
               child: FutureBuilder<QuerySnapshot>(
                 future: FirebaseFirestore.instance
@@ -71,8 +69,15 @@ class _ProfileState extends State<Profile> {
                       String phone = userDataMap["phone"];
                       String email = userDataMap["username"];
                       String address = userDataMap["address"];
+                      String image = userDataMap["image"];
                       return Column(
                         children: [
+                            CircleAvatar(
+                              backgroundColor:
+                                  myContants.secondaryColor.withOpacity(0.2),
+                              radius: 70,
+                              backgroundImage: NetworkImage(image),
+                            ),
                           const SizedBox(
                             height: 30,
                           ),
@@ -96,10 +101,10 @@ class _ProfileState extends State<Profile> {
                         ],
                       );
                     } else {
-                      return Text("Dữ liệu người dùng không tồn tại.");
+                      return const Text("Dữ liệu người dùng không tồn tại.");
                     }
                   } else {
-                    return Text("Không tìm thấy tài liệu phù hợp.");
+                    return const Text("Không tìm thấy tài liệu phù hợp.");
                   }
                 },
               ),
@@ -164,7 +169,8 @@ class _ProfileState extends State<Profile> {
                       Name: name,
                       Email: email,
                       Phone: phone,
-                      Address: address)),
+                      Address: address,
+                      ImageGet: image)),
             );
           },
           child: const Icon(Icons.arrow_forward, color: Colors.grey),
@@ -177,7 +183,7 @@ class _ProfileState extends State<Profile> {
   _dismissDialog() {
     Navigator.pop(context);
   }
-
+  // ignore: non_constant_identifier_names
   void Get_Random_User_With_Matching_Email(String userMail) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection("user")
@@ -196,10 +202,16 @@ class _ProfileState extends State<Profile> {
         phone = userDataMap["phone"];
         email = userDataMap["username"];
         address = userDataMap["address"];
-        print(name);
-        print(phone);
-        print(email);
-        print(address);
+        image = userDataMap["image"];
+        if(userDataMap["image"] == null){
+          image = ;
+        }else{
+          image = userDataMap["image"];
+        }
+        // print(name);
+        // print(phone);
+        // print(email);
+        // print(address);
       } else {
         // print("Dữ liệu người dùng không tồn tại.");
       }

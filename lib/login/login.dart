@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 26,
                           ),
                         ),
-                        const SizedBox(height: 12,),
+                        // const SizedBox(height: 10,),
                         Text(
                           'Welcome back you\'ve been missed!',
                           style: TextStyle(

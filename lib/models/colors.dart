@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 
 List<Color> backgroundColors = [
   const Color(0xFFCCE5FF), //light blue
@@ -10,5 +12,6 @@ List<Color> backgroundColors = [
   const Color(0xFFFFF0F0), //PALE PINK
   const Color(0xFFE6F9FF), //PALE BLUE
   const Color(0xFFD4EDDA), //MINT GREEN
-  const Color(0xFFFFF3CD), //PALE ORANGE
+  const Color(0xFFFFF3CD),
 ];
+const Color primaryClr = Color(0xFF6C63FF);

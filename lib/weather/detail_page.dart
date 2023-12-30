@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/models/constants.dart';
+import 'package:weather_app/weather/flutter_map.dart';
 import 'package:weather_app/weather/weather_item.dart';
 import 'package:weather_app/weather/welcome.dart';
 
@@ -46,7 +47,7 @@ class _DetailPageState extends State<DetailPage> {
               child: IconButton(
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Welcome()));
+                      MaterialPageRoute(builder: (context) => const flutter_map()));
                 },
                 icon: const Icon(Icons.settings),
               )),

@@ -21,7 +21,6 @@ class EditProfile extends StatefulWidget {
   final String Email;
   // ignore: non_constant_identifier_names
   final String Address;
-
   // ignore: non_constant_identifier_names
   final String ImageGet;
 
@@ -54,6 +53,7 @@ class _SignUpState extends State<EditProfile> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  // ignore: non_constant_identifier_names
   String Image_get_now = "";
 
   @override
@@ -71,8 +71,14 @@ class _SignUpState extends State<EditProfile> {
     _nameController.text = widget.Name;
     _phoneController.text = widget.Phone;
     _addressController.text = widget.Address;
-    Image_get_now = widget.ImageGet;
+    if (widget.ImageGet == "") {
+      Image_get_now = "";
+    } else {
+      Image_get_now = widget.ImageGet;
+    }
+   // print("this images right now: " + Image_get_now);
   }
+
   selectImages(ImageSource source) async {
     ImagePicker imagePicker = ImagePicker();
     file = await imagePicker.pickImage(source: source);
@@ -89,6 +95,7 @@ class _SignUpState extends State<EditProfile> {
       _images = image;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     Constants myContants = Constants();
@@ -108,17 +115,27 @@ class _SignUpState extends State<EditProfile> {
               children: [
                 const SizedBox(height: 20),
                 Stack(children: [
-                  _images != null
-                      ? CircleAvatar(
-                          radius: 70,
-                          backgroundImage: MemoryImage(_images!),
-                        )
-                      : CircleAvatar(
+                  Image_get_now == ""
+                      ? (_images == null
+                          ? CircleAvatar(
                               backgroundColor:
                                   myContants.secondaryColor.withOpacity(0.2),
                               radius: 70,
-                              backgroundImage: NetworkImage(Image_get_now),
-                            ),
+                              backgroundImage:
+                                  const AssetImage('assets/profile.png'),
+                            )
+                          : CircleAvatar(
+                              backgroundColor:
+                                  myContants.secondaryColor.withOpacity(0.2),
+                              radius: 70,
+                              backgroundImage: MemoryImage(_images!),
+                            ))
+                      : CircleAvatar(
+                          backgroundColor:
+                              myContants.secondaryColor.withOpacity(0.2),
+                          radius: 70,
+                          backgroundImage: NetworkImage(Image_get_now),
+                        ),
                   Positioned(
                     bottom: -15,
                     left: 90,

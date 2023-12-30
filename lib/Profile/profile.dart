@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,7 +53,6 @@ class _ProfileState extends State<Profile> {
                       child: CircularProgressIndicator(),
                     );
                   }
-
                   if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                     int randomIndex =
                         Random().nextInt(snapshot.data!.docs.length);
@@ -69,15 +67,29 @@ class _ProfileState extends State<Profile> {
                       String phone = userDataMap["phone"];
                       String email = userDataMap["username"];
                       String address = userDataMap["address"];
-                      String image = userDataMap["image"];
+                      //  String image = userDataMap["image"];
+                      String image = "";
+                      if (userDataMap["image"] == null) {
+                        image = 'assets/profile.png';
+                      } else {
+                        image = userDataMap["image"];
+                      }
                       return Column(
                         children: [
-                            CircleAvatar(
-                              backgroundColor:
-                                  myContants.secondaryColor.withOpacity(0.2),
-                              radius: 70,
-                              backgroundImage: NetworkImage(image),
-                            ),
+                          image == "assets/profile.png"
+                              ? CircleAvatar(
+                                  backgroundColor: myContants.secondaryColor
+                                      .withOpacity(0.2),
+                                  radius: 70,
+                                  backgroundImage:
+                                      const AssetImage('assets/profile.png'),
+                                )
+                              : CircleAvatar(
+                                  backgroundColor: myContants.secondaryColor
+                                      .withOpacity(0.2),
+                                  radius: 70,
+                                  backgroundImage: NetworkImage(image),
+                                ),
                           const SizedBox(
                             height: 30,
                           ),
@@ -162,6 +174,9 @@ class _ProfileState extends State<Profile> {
         leading: Icon(icondata),
         trailing: GestureDetector(
           onTap: () {
+            if( image == "assets/profile.png"){
+              image = "";
+            }
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -183,6 +198,7 @@ class _ProfileState extends State<Profile> {
   _dismissDialog() {
     Navigator.pop(context);
   }
+
   // ignore: non_constant_identifier_names
   void Get_Random_User_With_Matching_Email(String userMail) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -202,10 +218,10 @@ class _ProfileState extends State<Profile> {
         phone = userDataMap["phone"];
         email = userDataMap["username"];
         address = userDataMap["address"];
-        image = userDataMap["image"];
-        if(userDataMap["image"] == null){
-          image = ;
-        }else{
+        // image = userDataMap["image"];
+        if (userDataMap["image"] == null) {
+          image = "";
+        } else {
           image = userDataMap["image"];
         }
         // print(name);

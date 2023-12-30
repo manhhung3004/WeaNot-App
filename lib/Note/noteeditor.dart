@@ -1,9 +1,10 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/app_style.dart';
+import 'package:weather_app/models/constants.dart';
 
 class NoteEditorScreen extends StatefulWidget {
   const NoteEditorScreen({super.key});
@@ -13,19 +14,30 @@ class NoteEditorScreen extends StatefulWidget {
 }
 
 class _NoteEditorScreenState extends State<NoteEditorScreen> {
+  Constants myContants = Constants();
   int color_id = Random().nextInt(AppStyle.cardsColor.length);
   String date = DateTime.now().toString();
   String? user = FirebaseAuth.instance.currentUser?.email;
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _mainController = TextEditingController();
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _mainController = TextEditingController();
+
+  @override
+  void initState() {
+    if (_titleController.text != "" && _mainController.text != "") {
+      _titleController = TextEditingController();
+      _mainController = TextEditingController();
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyle.cardsColor[color_id],
-      appBar: AppBar(backgroundColor: AppStyle.cardsColor[color_id],
+      backgroundColor: Colors.white,
+      appBar: AppBar(backgroundColor: myContants.secondaryColor,
       elevation: 0.0,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text("Add a new Note", style: TextStyle(color: Colors.black)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text("Add a new Note", style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,7 +46,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
           children: [
           TextField(
             controller: _titleController,
-
             decoration: const InputDecoration(
               border: InputBorder.none,
               hintText: 'Note Title',
@@ -42,9 +53,6 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
             style: AppStyle.mainTitle,
           ),
           const SizedBox(height: 8.0,),
-        //  Text(date, style: AppStyle.dateTitle,),
-        //  const SizedBox(height: 28.0,),
-
           TextField(
             controller: _mainController,
             keyboardType: TextInputType.multiline,
@@ -58,8 +66,11 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
         ],),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppStyle.accentColor,
+        backgroundColor:myContants.primaryColor,
         onPressed: () async{
+          if(_titleController.text.isEmpty || _mainController.text.isEmpty){
+            await confirmDialog(context);
+          }else{
             FirebaseFirestore.instance.collection("notes").add({
             "note_title": _titleController.text,
             "Creation_Date": date,
@@ -68,10 +79,32 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
               "user": user,
           }).then((value) {
             Navigator.pop(context);
-          }).catchError((error) => print("failed to add new Note due to $error"));
+          });
+          }
         },
         child: const Icon(Icons.save),
       ),
     );
   }
+  Future<dynamic> confirmDialog(BuildContext context) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text('Title or content is empty!!!!!!'),
+          content: const Text('Please confirm'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: const Text('confirm'),
+            )
+          ],
+        );
+      });
+}
 }

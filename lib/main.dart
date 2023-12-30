@@ -13,6 +13,7 @@ Future<void> main() async {
       appId: "1:80732388498:android:bddff46eb4deaae40dba4b",
       messagingSenderId: "80732388498",
       projectId: "weather-app-49c60",
+      storageBucket: "gs://weather-app-49c60.appspot.com",
       ),
 
   ): await Firebase.initializeApp();

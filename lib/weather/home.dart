@@ -193,7 +193,7 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            const SizedBox( height: 20,),
+            // const SizedBox( height: 5,),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(

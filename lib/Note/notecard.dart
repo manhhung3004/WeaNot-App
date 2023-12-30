@@ -1,4 +1,4 @@
-import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +11,15 @@ Widget noteCard(
     padding: const EdgeInsets.only(top: 10.0, bottom: 10),
     child: Container(
       decoration: BoxDecoration(
-          color: Color(Random().nextInt(0xffffffff)).withOpacity(0.30),
-          borderRadius: BorderRadius.circular(10)),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, 5),
+                color: Colors.blue.withOpacity(.2),
+                spreadRadius: 5,
+                blurRadius: 10)
+          ]),
       child: InkWell(
         onTap: onTap,
         child: Row(

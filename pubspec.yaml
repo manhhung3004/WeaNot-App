@@ -50,6 +50,9 @@ dependencies:
   latlong2: ^0.9.0
   image_picker: ^1.0.5
   sqflite: ^2.3.0
+  syncfusion_flutter_calendar: ^24.1.43
+  syncfusion_flutter_datepicker: ^24.1.43
+  provider: ^6.1.1
 
 dev_dependencies:
   flutter_test:

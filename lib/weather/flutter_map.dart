@@ -15,7 +15,9 @@ class flutter_map extends StatelessWidget {
         children: [
           FlutterMap(
             options: const MapOptions(
+              // ignore: deprecated_member_use
               center: LatLng(51.509364, -0.128928),
+              // ignore: deprecated_member_use
               zoom: 3.2,
             ),
             children: [

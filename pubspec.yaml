@@ -53,6 +53,7 @@ dependencies:
   syncfusion_flutter_calendar: ^24.1.43
   syncfusion_flutter_datepicker: ^24.1.43
   provider: ^6.1.1
+  flutter_datetime_picker: ^1.5.1
 
 dev_dependencies:
   flutter_test:

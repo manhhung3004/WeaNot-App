@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:weather_app/CollecData/model_Data.dart';
 import 'package:weather_app/firebase_auth/firebase_auth_service.dart';
 import 'package:weather_app/login/login.dart';
 import 'package:weather_app/login/my_sign_up_button.dart';
 import 'package:weather_app/login/text_fill.dart';
-import 'package:weather_app/weather/home.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -39,11 +37,6 @@ class _SignUpState extends State<SignUp> {
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // logo
-            // const Icon(
-            //   Icons.lock,
-            //   size: 30,
-            // ),
             const SizedBox(height: 50),
             Text(
               'Get on board!',

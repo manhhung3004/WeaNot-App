@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:weather_app/calender/meeting_data_source.dart';
@@ -14,16 +13,11 @@ class Calender extends StatefulWidget {
 }
 
 class _CalenderState extends State<Calender> {
-  late CalendarController calendarController;
-  String _text = '';
+  // CalendarController calendarController;
+
+  CalendarController calendarController = CalendarController();
   CalendarView calendarView = CalendarView.month;
-  @override
-  // void initState() {
-  //   super.initState();
-  //   CalendarController calendarController = CalendarController();
-  //   String _text = '';
-  //   CalendarView calendarView = CalendarView.month;
-  // }
+
   @override
   Widget build(BuildContext context) {
     Constants myContants = Constants();
@@ -35,7 +29,7 @@ class _CalenderState extends State<Calender> {
         actions: [
           IconButton(
               onPressed: () {
-                provider.addMeeting();
+                provider.addMeeting(context);
               },
               icon: const Icon(Icons.add)),
           IconButton(
@@ -80,7 +74,6 @@ class _CalenderState extends State<Calender> {
               view: calendarView,
               controller: calendarController,
               initialSelectedDate: DateTime.now(),
-              onSelectionChanged: selectionChanged,
               cellBorderColor: Colors.transparent,
               dataSource: MeetingDataSource(provider.meeting),
               monthViewSettings: const MonthViewSettings(
@@ -95,36 +88,5 @@ class _CalenderState extends State<Calender> {
         ],
       ),
     );
-  }
-
-  void selectionChanged(CalendarSelectionDetails details) {
-    if (calendarController.view == CalendarView.month ||
-        calendarController.view == CalendarView.timelineMonth) {
-      _text = DateFormat('dd, MMMM yyyy').format(details.date!).toString();
-
-    } else {
-      _text =
-          DateFormat('dd, MMMM yyyy hh:mm a').format(details.date!).toString();
-    }
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            // ignore: avoid_unnecessary_containers
-            title: Container(
-                child:
-                    const Text("Details shown by selection changed callback")),
-            content:
-                // ignore: avoid_unnecessary_containers
-                Container(child: Text("You have selected " '$_text')),
-            actions: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('close'))
-            ],
-          );
-        });
   }
 }

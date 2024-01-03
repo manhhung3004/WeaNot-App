@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/calender/calender.dart';
 import 'package:weather_app/Note/notehome.dart';
+import 'package:weather_app/calender/Calender.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/weather/home.dart';
@@ -52,7 +52,7 @@ class _WelcometState extends State<Welcome> {
                   MaterialPageRoute(builder: (context) => const HomeScreen()));
             } else if (value == 2) {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Calender()));
+                  MaterialPageRoute(builder: (context) => LoadDataFromFireStore()));
             }
           }),
         ],

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/calender/meeting_provider.dart';
 import 'package:weather_app/login/login.dart';
 
 Future<void> main() async {
@@ -27,14 +26,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return MaterialApp(
       //use MaterialApp() widget like this
-      providers: [ChangeNotifierProvider(create: (context) => MeetingProvider())],
-      child:const MaterialApp(
         home: LoginPage(), //create new widget class for this 'home' to
       // escape 'No MediaQuery widget found' error
       debugShowCheckedModeBanner: false,
-      ),
+
     );
   }
 }

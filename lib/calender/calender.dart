@@ -1,92 +1,427 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:weather_app/calender/meeting_data_source.dart';
-import 'package:weather_app/calender/meeting_provider.dart';
-import 'package:weather_app/models/constants.dart';
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_final_fields
 
-// ignore: must_be_immutable
-class Calender extends StatefulWidget {
-  const Calender({super.key});
+import 'dart:async';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:intl/intl.dart';
+import 'package:weather_app/calender/EditViewPage.dart';
+import 'package:weather_app/calender/MeetingDataSource.dart';
+import 'package:weather_app/calender/Meetings.dart';
+
+class LoadDataFromFireStore extends StatefulWidget {
+  const LoadDataFromFireStore({super.key});
   @override
-  State<Calender> createState() => _CalenderState();
+  State<LoadDataFromFireStore> createState() => _LoadDataFromFireStoreState();
 }
 
-class _CalenderState extends State<Calender> {
-  // CalendarController calendarController;
-
-  CalendarController calendarController = CalendarController();
+class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
+  String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
+  final fireStoreReference = FirebaseFirestore.instance;
+  int _tapCount = 0;
   CalendarView calendarView = CalendarView.month;
+  CalendarController calendarController = CalendarController();
+  final List<Color> _colorCollection = <Color>[];
+  MeetingDataSource? events;
+  final List<String> options = <String>['Add'];
+  bool isInitialLoaded = false;
+
+  @override
+  void initState() {
+    _initializeEventColor();
+    getDataFromFireStore().then((results) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {});
+      });
+    });
+    fireStoreReference
+        .collection("CalendarAppointmentCollection")
+        .snapshots()
+        .listen((event) {
+      for (var element in event.docChanges) {
+        if (element.type == DocumentChangeType.added) {
+          if (!isInitialLoaded) {
+            continue;
+          }
+          final Random random = Random();
+          Meeting app = Meeting.fromFireBaseSnapShotData(
+              element, _colorCollection[random.nextInt(9)]);
+          setState(() {
+            events!.appointments!.add(app);
+            events!.notifyListeners(CalendarDataSourceAction.add, [app]);
+          });
+        } else if (element.type == DocumentChangeType.modified) {
+          if (!isInitialLoaded) {
+            continue;
+          }
+          final Random random = Random();
+          Meeting app = Meeting.fromFireBaseSnapShotData(
+              element, _colorCollection[random.nextInt(9)]);
+          setState(() {
+            int index = events!.appointments!
+                .indexWhere((app) => app.key == element.doc.id);
+            Meeting meeting = events!.appointments![index];
+            events!.appointments!.remove(meeting);
+            events!.notifyListeners(CalendarDataSourceAction.remove, [meeting]);
+            events!.appointments!.add(app);
+            events!.notifyListeners(CalendarDataSourceAction.add, [app]);
+          });
+        } else if (element.type == DocumentChangeType.removed) {
+          if (!isInitialLoaded) {
+            continue;
+          }
+          setState(() {
+            int index = events!.appointments!
+                .indexWhere((app) => app.key == element.doc.id);
+            Meeting meeting = events!.appointments![index];
+            events!.appointments!.remove(meeting);
+            events!.notifyListeners(CalendarDataSourceAction.remove, [meeting]);
+          });
+        }
+      }
+    });
+    super.initState();
+  }
+  Future<void> getDataFromFireStore() async {
+    var snapShotsValue = await fireStoreReference
+        .collection("CalendarAppointmentCollection")
+        .where("user", isEqualTo: userMail)
+        .get();
+    final Random random = Random();
+    List<Meeting> list = snapShotsValue.docs
+        .map((e) => Meeting(
+            eventName: e.data()['Subject'],
+            from:
+                DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['StartTime']),
+            to: DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['EndTime']),
+            background: _colorCollection[random.nextInt(9)],
+            isAllDay: false,
+            key: e.id))
+        .toList();
+    setState(() {
+      events = MeetingDataSource(list);
+    });
+  }
+@override
+Widget build(BuildContext context) {
+  isInitialLoaded = true;
+  return Scaffold(
+    appBar: AppBar(
+      leading: PopupMenuButton<String>(
+        icon: const Icon(Icons.add),
+        itemBuilder: (BuildContext context) => options.map((String choice) {
+          return PopupMenuItem<String>(
+            value: choice,
+            child: Text(choice),
+          );
+        }).toList(),
+        onSelected: (String value) {
+          if (value == 'Add') {
+            addTask(context);
+          }
+        },
+      ),
+    ),
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    calendarView = CalendarView.month;
+                    calendarController.view = calendarView;
+                  });
+                },
+                child: const Text("Month View"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    calendarView = CalendarView.week;
+                    calendarController.view = calendarView;
+                  });
+                },
+                child: const Text("Week View"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    calendarView = CalendarView.day;
+                    calendarController.view = calendarView;
+                  });
+                },
+                child: const Text("Day View"),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SfCalendar(
+            view: CalendarView.month,
+            controller: calendarController,
+            initialDisplayDate: DateTime.now(),
+            selectionDecoration: BoxDecoration(
+              border: Border.all(color: Colors.blue, width: 2),
+              borderRadius: BorderRadius.circular(4),
+              shape: BoxShape.rectangle,
+            ),
+            dataSource: events,
+            monthViewSettings: const MonthViewSettings(
+              appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+              showAgenda: true,
+            ),
+            blackoutDates: [
+              DateTime.now().subtract(const Duration(hours: 48)),
+              DateTime.now().subtract(const Duration(hours: 24)),
+            ],
+            appointmentBuilder: appointmentBuilder,
+            onTap: (details) {
+              // Track tap count using a stateful widget
+              setState(() {
+                _tapCount++;
+                if (_tapCount == 2) {
+                  if (details.appointments == null) return;
+                  final event = details.appointments!;
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EventViewPage(event: event),
+                  ));
+                  _tapCount = 0; // Reset tap count after navigation
+                } else {
+                  // Optionally provide visual feedback for first tap
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Double tap to view event')),
+                  );
+                  // Use a Timer to reset tap count if the second tap isn't received within a short duration
+                  Timer( const Duration(milliseconds: 200),
+                      () => setState(() => _tapCount = 0));
+                }
+              });
+            },
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget appointmentBuilder(
+  BuildContext context,
+  CalendarAppointmentDetails details,
+) {
+  final event = details.appointments.first;
+  return Container(
+    padding: const EdgeInsets.all(5),
+    width: details.bounds.width,
+    height: details.bounds.height,
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      children: [
+        Text(
+          event.eventName,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          event.from.toString(),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+  void _initializeEventColor() {
+    _colorCollection.add(const Color(0xFF0F8644));
+    _colorCollection.add(const Color(0xFF8B1FA9));
+    _colorCollection.add(const Color(0xFFD20100));
+    _colorCollection.add(const Color(0xFFFC571D));
+    _colorCollection.add(const Color(0xFF36B37B));
+    _colorCollection.add(const Color(0xFF01A1EF));
+    _colorCollection.add(const Color(0xFF3D4FB5));
+    _colorCollection.add(const Color(0xFFE47C73));
+    _colorCollection.add(const Color(0xFF636363));
+    _colorCollection.add(const Color(0xFF0A8043));
+  }
+}
+
+class AddTaskDialog extends StatefulWidget {
+  @override
+  _AddTaskDialogState createState() => _AddTaskDialogState();
+}
+
+class _AddTaskDialogState extends State<AddTaskDialog> {
+  String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
+  final fireStoreReference = FirebaseFirestore.instance;
+  DateTime selectedStart = DateTime.now();
+  DateTime selectedEnd = DateTime.now();
+  TextEditingController _eventNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    Constants myContants = Constants();
-    final provider = Provider.of<MeetingProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: myContants.primaryColor,
-        title: const Text("Calendar"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                provider.addMeeting(context);
-              },
-              icon: const Icon(Icons.add)),
-          IconButton(
-              onPressed: () {
-                provider.editMeeting(2);
-              },
-              icon: const Icon(Icons.edit)),
-        ],
-      ),
-      body: Column(
-        children: [
-          Row(
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      content: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          height: 300,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              OutlinedButton(
-                  onPressed: () {
+            const Center(
+                child: Text(
+                  'Add Task',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const Text(
+                'Task Name',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextField(
+                controller: _eventNameController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter task name',
+                ),
+              ),
+              const Text(
+                'Start Time',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              CupertinoButton(
+                child: Text(
+                  '${selectedStart.day}/${selectedStart.month}/${selectedStart.year} - ${selectedStart.hour}:${selectedStart.minute}:${selectedStart.second}',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+                onPressed: () async {
+                  final newTime = await showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        backgroundColor: Colors.white,
+                        initialDateTime: selectedStart,
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          setState(() {
+                            selectedStart = newDateTime;
+                          });
+                        },
+                        use24hFormat: true,
+                        mode: CupertinoDatePickerMode.dateAndTime,
+                      ),
+                    ),
+                  );
+                  if (newTime != null) {
                     setState(() {
-                      calendarView = CalendarView.month;
-                      calendarController.view = calendarView;
+                      selectedStart = newTime;
                     });
-                  },
-                  child: const Text("Month View")),
-              OutlinedButton(
-                  onPressed: () {
+                  }
+                },
+              ),
+              const Text(
+                'End Time',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              CupertinoButton(
+                child: Text(
+                  '${selectedEnd.day}/${selectedEnd.month}/${selectedEnd.year} - ${selectedEnd.hour}:${selectedEnd.minute}:${selectedEnd.second}',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+                onPressed: () async {
+                  final newTime = await showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        backgroundColor: Colors.white,
+                        initialDateTime: selectedEnd,
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          setState(() {
+                            selectedEnd = newDateTime;
+                          });
+                        },
+                        use24hFormat: true,
+                        mode: CupertinoDatePickerMode.dateAndTime,
+                      ),
+                    ),
+                  );
+                  if (newTime != null) {
                     setState(() {
-                      calendarView = CalendarView.week;
-                      calendarController.view = calendarView;
+                      selectedEnd = newTime;
                     });
-                  },
-                  child: const Text("Week View")),
-              OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      calendarView = CalendarView.day;
-                      calendarController.view = calendarView;
-                    });
-                  },
-                  child: const Text("Day View")),
+                  }
+                },
+              ),
             ],
           ),
-          Expanded(
-            child: SfCalendar(
-              view: calendarView,
-              controller: calendarController,
-              initialSelectedDate: DateTime.now(),
-              cellBorderColor: Colors.transparent,
-              dataSource: MeetingDataSource(provider.meeting),
-              monthViewSettings: const MonthViewSettings(
-                  appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-                  showAgenda: true),
-              blackoutDates: [
-                DateTime.now().subtract(const Duration(hours: 48)),
-                DateTime.now().subtract(const Duration(hours: 24)),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+            String formattedDateEnd =
+                formatter.format(DateTime.parse(selectedEnd.toString()));
+            String formattedDateStart =
+                formatter.format(DateTime.parse(selectedStart.toString()));
+            await fireStoreReference
+                .collection("CalendarAppointmentCollection")
+                .doc()
+                .set({
+              'Subject': _eventNameController.text,
+              'StartTime': formattedDateStart,
+              'EndTime': formattedDateEnd,
+              'user': userMail,
+            });
+          },
+          child: const Text('Add'),
+        ),
+      ],
     );
   }
+}
+
+Future addTask(BuildContext context) async {
+  return await showDialog(
+    context: context,
+    builder: (context) => AddTaskDialog(),
+  );
 }

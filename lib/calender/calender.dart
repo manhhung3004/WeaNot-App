@@ -1,163 +1,427 @@
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_final_fields
+
+import 'dart:async';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:weather_app/calender/events.dart';
-import 'package:weather_app/models/constants.dart';
+import 'package:weather_app/calender/EditViewPage.dart';
+import 'package:weather_app/calender/MeetingDataSource.dart';
+import 'package:weather_app/calender/Meetings.dart';
 
-class Calender extends StatefulWidget {
-  const Calender({super.key});
+class LoadDataFromFireStore extends StatefulWidget {
+  const LoadDataFromFireStore({super.key});
   @override
-  State<Calender> createState() => _CalenderState();
+  State<LoadDataFromFireStore> createState() => _LoadDataFromFireStoreState();
 }
 
-Container taskList(
-    String title, String desscription, IconData iconImg, Color iconColor) {
-  return Container(
-    padding: const EdgeInsets.only(top: 10),
-    child: Row(
+class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
+  String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
+  final fireStoreReference = FirebaseFirestore.instance;
+  int _tapCount = 0;
+  CalendarView calendarView = CalendarView.month;
+  CalendarController calendarController = CalendarController();
+  final List<Color> _colorCollection = <Color>[];
+  MeetingDataSource? events;
+  final List<String> options = <String>['Add'];
+  bool isInitialLoaded = false;
+
+  @override
+  void initState() {
+    _initializeEventColor();
+    getDataFromFireStore().then((results) {
+      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {});
+      });
+    });
+    fireStoreReference
+        .collection("CalendarAppointmentCollection")
+        .snapshots()
+        .listen((event) {
+      for (var element in event.docChanges) {
+        if (element.type == DocumentChangeType.added) {
+          if (!isInitialLoaded) {
+            continue;
+          }
+          final Random random = Random();
+          Meeting app = Meeting.fromFireBaseSnapShotData(
+              element, _colorCollection[random.nextInt(9)]);
+          setState(() {
+            events!.appointments!.add(app);
+            events!.notifyListeners(CalendarDataSourceAction.add, [app]);
+          });
+        } else if (element.type == DocumentChangeType.modified) {
+          if (!isInitialLoaded) {
+            continue;
+          }
+          final Random random = Random();
+          Meeting app = Meeting.fromFireBaseSnapShotData(
+              element, _colorCollection[random.nextInt(9)]);
+          setState(() {
+            int index = events!.appointments!
+                .indexWhere((app) => app.key == element.doc.id);
+            Meeting meeting = events!.appointments![index];
+            events!.appointments!.remove(meeting);
+            events!.notifyListeners(CalendarDataSourceAction.remove, [meeting]);
+            events!.appointments!.add(app);
+            events!.notifyListeners(CalendarDataSourceAction.add, [app]);
+          });
+        } else if (element.type == DocumentChangeType.removed) {
+          if (!isInitialLoaded) {
+            continue;
+          }
+          setState(() {
+            int index = events!.appointments!
+                .indexWhere((app) => app.key == element.doc.id);
+            Meeting meeting = events!.appointments![index];
+            events!.appointments!.remove(meeting);
+            events!.notifyListeners(CalendarDataSourceAction.remove, [meeting]);
+          });
+        }
+      }
+    });
+    super.initState();
+  }
+  Future<void> getDataFromFireStore() async {
+    var snapShotsValue = await fireStoreReference
+        .collection("CalendarAppointmentCollection")
+        .where("user", isEqualTo: userMail)
+        .get();
+    final Random random = Random();
+    List<Meeting> list = snapShotsValue.docs
+        .map((e) => Meeting(
+            eventName: e.data()['Subject'],
+            from:
+                DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['StartTime']),
+            to: DateFormat('dd/MM/yyyy HH:mm:ss').parse(e.data()['EndTime']),
+            background: _colorCollection[random.nextInt(9)],
+            isAllDay: false,
+            key: e.id))
+        .toList();
+    setState(() {
+      events = MeetingDataSource(list);
+    });
+  }
+@override
+Widget build(BuildContext context) {
+  isInitialLoaded = true;
+  return Scaffold(
+    appBar: AppBar(
+      leading: PopupMenuButton<String>(
+        icon: const Icon(Icons.add),
+        itemBuilder: (BuildContext context) => options.map((String choice) {
+          return PopupMenuItem<String>(
+            value: choice,
+            child: Text(choice),
+          );
+        }).toList(),
+        onSelected: (String value) {
+          if (value == 'Add') {
+            addTask(context);
+          }
+        },
+      ),
+    ),
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Icon(
-          iconImg,
-          color: const Color(0xff00cf8d),
-          size: 30,
-        ),
-        Container(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    calendarView = CalendarView.month;
+                    calendarController.view = calendarView;
+                  });
+                },
+                child: const Text("Month View"),
               ),
-              const SizedBox(
-                height: 10,
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    calendarView = CalendarView.week;
+                    calendarController.view = calendarView;
+                  });
+                },
+                child: const Text("Week View"),
               ),
-              Text(
-                desscription,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white.withOpacity(0.6),
-                ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    calendarView = CalendarView.day;
+                    calendarController.view = calendarView;
+                  });
+                },
+                child: const Text("Day View"),
               ),
             ],
           ),
-        )
+        ),
+        Expanded(
+          child: SfCalendar(
+            view: CalendarView.month,
+            controller: calendarController,
+            initialDisplayDate: DateTime.now(),
+            selectionDecoration: BoxDecoration(
+              border: Border.all(color: Colors.blue, width: 2),
+              borderRadius: BorderRadius.circular(4),
+              shape: BoxShape.rectangle,
+            ),
+            dataSource: events,
+            monthViewSettings: const MonthViewSettings(
+              appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+              showAgenda: true,
+            ),
+            blackoutDates: [
+              DateTime.now().subtract(const Duration(hours: 48)),
+              DateTime.now().subtract(const Duration(hours: 24)),
+            ],
+            appointmentBuilder: appointmentBuilder,
+            onTap: (details) {
+              // Track tap count using a stateful widget
+              setState(() {
+                _tapCount++;
+                if (_tapCount == 2) {
+                  if (details.appointments == null) return;
+                  final event = details.appointments!;
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => EventViewPage(event: event),
+                  ));
+                  _tapCount = 0; // Reset tap count after navigation
+                } else {
+                  // Optionally provide visual feedback for first tap
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Double tap to view event')),
+                  );
+                  // Use a Timer to reset tap count if the second tap isn't received within a short duration
+                  Timer( const Duration(milliseconds: 200),
+                      () => setState(() => _tapCount = 0));
+                }
+              });
+            },
+          ),
+        ),
       ],
     ),
   );
 }
 
-class _CalenderState extends State<Calender> {
-  String? userMail = FirebaseAuth.instance.currentUser?.email;
-  Constants myContants = Constants();
-  late Map<DateTime, List<Event>> selectedEvents;
-  CalendarFormat format = CalendarFormat.month;
-  DateTime selectedDay = DateTime.now();
-  DateTime focusDay = DateTime.now();
-  final TextEditingController _evenController = TextEditingController();
-  String date = DateTime.now().toString();
-  final bool check = false;
+Widget appointmentBuilder(
+  BuildContext context,
+  CalendarAppointmentDetails details,
+) {
+  final event = details.appointments.first;
+  return Container(
+    padding: const EdgeInsets.all(5),
+    width: details.bounds.width,
+    height: details.bounds.height,
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      children: [
+        Text(
+          event.eventName,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          event.from.toString(),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+  void _initializeEventColor() {
+    _colorCollection.add(const Color(0xFF0F8644));
+    _colorCollection.add(const Color(0xFF8B1FA9));
+    _colorCollection.add(const Color(0xFFD20100));
+    _colorCollection.add(const Color(0xFFFC571D));
+    _colorCollection.add(const Color(0xFF36B37B));
+    _colorCollection.add(const Color(0xFF01A1EF));
+    _colorCollection.add(const Color(0xFF3D4FB5));
+    _colorCollection.add(const Color(0xFFE47C73));
+    _colorCollection.add(const Color(0xFF636363));
+    _colorCollection.add(const Color(0xFF0A8043));
+  }
+}
 
+class AddTaskDialog extends StatefulWidget {
   @override
-  void initState() {
-    selectedEvents = {};
-    super.initState();
-  }
+  _AddTaskDialogState createState() => _AddTaskDialogState();
+}
 
-  DateTime today = DateTime.now();
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      today = day;
-    });
-  }
+class _AddTaskDialogState extends State<AddTaskDialog> {
+  String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
+  final fireStoreReference = FirebaseFirestore.instance;
+  DateTime selectedStart = DateTime.now();
+  DateTime selectedEnd = DateTime.now();
+  TextEditingController _eventNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    Constants myContants = Constants();
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: myContants.primaryColor,
-        title: const Text("Calender"),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            SizedBox(
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      content: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          height: 300,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+            const Center(
                 child: Text(
-              "Today ${DateFormat('dd/MM/yyyy').format(today)}",
-            )),
-            Container(
-              // height: MediaQuery.of(context).size.height * 0.30,
-              padding: const EdgeInsets.only(bottom: 0),
-              child: TableCalendar(
-                locale: "en_US",
-                rowHeight: 43,
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
+                  'Add Task',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                availableGestures: AvailableGestures.all,
-                selectedDayPredicate: (day) => isSameDay(day, today),
-                focusedDay: today,
-                firstDay: DateTime.utc(2010, 10, 16),
-                lastDay: DateTime.utc(2030, 3, 14),
-                onDaySelected: _onDaySelected,
               ),
-            ),
-            // Task list
-            Container(
-              padding: const EdgeInsets.only(left: 30),
-              width: MediaQuery.of(context ).size.width,
-              height: MediaQuery.of(context ).size.height * 0.37,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
+              const Text(
+                'Task Name',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-                color: const Color.fromARGB(255, 0, 135, 245).withOpacity(0.76),
               ),
-              child: Stack(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Text(
-                          "Today",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+              TextField(
+                controller: _eventNameController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter task name',
+                ),
+              ),
+              const Text(
+                'Start Time',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              CupertinoButton(
+                child: Text(
+                  '${selectedStart.day}/${selectedStart.month}/${selectedStart.year} - ${selectedStart.hour}:${selectedStart.minute}:${selectedStart.second}',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+                onPressed: () async {
+                  final newTime = await showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        backgroundColor: Colors.white,
+                        initialDateTime: selectedStart,
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          setState(() {
+                            selectedStart = newDateTime;
+                          });
+                        },
+                        use24hFormat: true,
+                        mode: CupertinoDatePickerMode.dateAndTime,
                       ),
-                      taskList("Task 1", "Desscription", CupertinoIcons.check_mark_circled_solid,const Color(0xff00cf8c)),
-                      taskList("Task 2", "Desscription", CupertinoIcons.checkmark_circle_fill, const  Color.fromARGB(255, 83, 207, 0)),
-                    ],
-                  )
-                ],
+                    ),
+                  );
+                  if (newTime != null) {
+                    setState(() {
+                      selectedStart = newTime;
+                    });
+                  }
+                },
               ),
-            )
-          ],
+              const Text(
+                'End Time',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              CupertinoButton(
+                child: Text(
+                  '${selectedEnd.day}/${selectedEnd.month}/${selectedEnd.year} - ${selectedEnd.hour}:${selectedEnd.minute}:${selectedEnd.second}',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+                onPressed: () async {
+                  final newTime = await showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        backgroundColor: Colors.white,
+                        initialDateTime: selectedEnd,
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          setState(() {
+                            selectedEnd = newDateTime;
+                          });
+                        },
+                        use24hFormat: true,
+                        mode: CupertinoDatePickerMode.dateAndTime,
+                      ),
+                    ),
+                  );
+                  if (newTime != null) {
+                    setState(() {
+                      selectedEnd = newTime;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () async {
+            DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+            String formattedDateEnd =
+                formatter.format(DateTime.parse(selectedEnd.toString()));
+            String formattedDateStart =
+                formatter.format(DateTime.parse(selectedStart.toString()));
+            await fireStoreReference
+                .collection("CalendarAppointmentCollection")
+                .doc()
+                .set({
+              'Subject': _eventNameController.text,
+              'StartTime': formattedDateStart,
+              'EndTime': formattedDateEnd,
+              'user': userMail,
+            });
+          },
+          child: const Text('Add'),
+        ),
+      ],
     );
   }
+}
+
+Future addTask(BuildContext context) async {
+  return await showDialog(
+    context: context,
+    builder: (context) => AddTaskDialog(),
+  );
 }

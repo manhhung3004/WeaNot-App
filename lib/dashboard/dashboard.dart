@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/Profile/profile.dart';
-import 'package:weather_app/calender/calender.dart';
 import 'package:weather_app/Note/notehome.dart';
+import 'package:weather_app/calender/Calender.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/weather/welcome.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  const Dashboard({super.key});
   @override
   State<Dashboard> createState() => _Dashboard();
 }
@@ -122,7 +122,7 @@ class _Dashboard extends State<Dashboard> {
                           switch(titles[index]){
                             case "Note": Navigator.push(context, MaterialPageRoute(builder: (context) =>   const HomeScreen()));
                             case "Weather": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
-                            case "Schedule": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Calender()));
+                            case "Schedule": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const LoadDataFromFireStore() ));
                           }
                         },
                         child: Container(

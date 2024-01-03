@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:weather_app/calender/db_helper.dart';
+import 'package:provider/provider.dart';
 import 'package:weather_app/login/login.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DBHelper.initDb();
   Platform.isAndroid?
   await Firebase.initializeApp(
     options: const FirebaseOptions(
@@ -28,15 +26,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return MaterialApp(
       //use MaterialApp() widget like this
-      home: LoginPage(), //create new widget class for this 'home' to
+        home: LoginPage(), //create new widget class for this 'home' to
       // escape 'No MediaQuery widget found' error
       debugShowCheckedModeBanner: false,
+
     );
   }
 }
-
 class Loginpage extends StatelessWidget{
 const Loginpage({super.key});
 @override

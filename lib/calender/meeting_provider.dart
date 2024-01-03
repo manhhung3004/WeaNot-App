@@ -102,7 +102,6 @@ class MeetingProvider extends ChangeNotifier {
         ),
       );
     }
-    // Call the `openDialog` function
     await openDialog(context);
   }
   void editMeeting(int index) {

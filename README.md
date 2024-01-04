@@ -1,4 +1,4 @@
-# Weather App
+# WeaNot App
 
 NT118
 This project is a weather app that provides users with up-to-date weather information for their current location. The app uses the OpenWeatherMap API to get weather data, and it displays the data in a user-friendly interface.
@@ -9,6 +9,9 @@ Hourly forecast
 Daily forecast
 Weather alerts
 Location search
+
+
+
 
 Technical implementation
 The app is built using Flutter, a cross-platform mobile development framework. The app uses the OpenWeatherMap API to get weather data, and it displays the data using a variety of Flutter widgets.

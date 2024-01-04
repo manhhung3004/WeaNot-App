@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,7 +39,7 @@ class _NoteEditorScreenState extends State<NoteEditorScreen> {
       appBar: AppBar(backgroundColor: myContants.secondaryColor,
       elevation: 0.0,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text("Add a new Note", style: TextStyle(color: Colors.white)),
+        title: const Text("Add a new Note", style: TextStyle(color: Colors.white,fontSize: 23), ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

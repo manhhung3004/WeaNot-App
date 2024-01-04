@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:weather_app/Profile/edit_profile.dart';
+import 'package:weather_app/dashboard/dashboard.dart';
 import 'package:weather_app/login/login.dart';
 import 'package:weather_app/models/constants.dart';
 
@@ -16,6 +17,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
+  final FirebaseAuth auth = FirebaseAuth.instance;
   Constants myContants = Constants();
   String name = "";
   String phone = "";
@@ -32,8 +34,25 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 23,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1,
+          ),
+        ),
         backgroundColor: myContants.primaryColor,
-        title: const Text("Your Profile"),
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.home, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const Dashboard(),
+            ));
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -73,6 +92,7 @@ class _ProfileState extends State<Profile> {
                       }
                       return Column(
                         children: [
+                          // const SizedBox(height: 40,),
                           image == "assets/profile.png"
                               ? CircleAvatar(
                                   backgroundColor: myContants.secondaryColor
@@ -131,7 +151,7 @@ class _ProfileState extends State<Profile> {
                         content: const Text('Please confirm'),
                         actions: <Widget>[
                           TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (context) => const LoginPage()),

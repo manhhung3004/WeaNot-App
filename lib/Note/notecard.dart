@@ -8,7 +8,7 @@ import 'package:share/share.dart';
 Widget noteCard(
     Function()? onTap, QueryDocumentSnapshot doc, BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.only(top: 10.0, bottom: 10),
+    padding: const EdgeInsets.all(10),
     child: Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -26,7 +26,7 @@ Widget noteCard(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(20.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
               ),

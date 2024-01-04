@@ -47,6 +47,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Widget build(BuildContext context) {
     Constants myContants = Constants();
     return Scaffold(
+      appBar: AppBar(),
       resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(0),
@@ -54,7 +55,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         child: Column(
           children: [
             const SizedBox(
-              height: 40,
+              height: 20,
             ),
             Stack(
               children: [
@@ -71,7 +72,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   ),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Positioned(
                   top: 140,

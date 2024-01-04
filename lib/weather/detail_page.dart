@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/models/constants.dart';
@@ -45,8 +47,10 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.only(right: 8.0),
               child: IconButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const flutter_map()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const flutter_map()));
                 },
                 icon: const Icon(Icons.settings),
               )),
@@ -103,7 +107,6 @@ class _DetailPageState extends State<DetailPage> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        // ignore: prefer_interpolation_to_compose_strings
                         Image.asset(
                           "${'assets/' + weatherUrl}.png",
                           width: 40,
@@ -307,6 +310,7 @@ class _DetailPageState extends State<DetailPage> {
                                 ]),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
+                              // xet min/max
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -354,9 +358,7 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    // ignore: duplicate_ignore
                                     children: [
-                                      // ignore: prefer_interpolation_to_compose_strings
                                       Image.asset(
                                         '${'assets/' + futureImageURL}.png',
                                         width: 30,

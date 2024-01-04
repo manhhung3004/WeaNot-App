@@ -16,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<String> notes = [];
   bool issort = false;
+  late List<Color> colorCollection;
   Constants myContants = Constants();
   String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
   @override
@@ -23,11 +24,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: myContants.secondaryColor,
         title: const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
             "Notes",
+            style: TextStyle(
+              fontSize: 23,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1,
+            ),
           ),
         ),
         actions: [
@@ -45,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: const Icon(
                 Icons.sort,
-                color: Color.fromARGB(255, 58, 58, 58),
                 size: 30,
+                color: Colors.white
               ),
             ),
           ),
@@ -117,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (context) => NoteReaderScreen(note),
                             ),
                           );
-                        }, note, context);
+                        }, note, context,);
                       },
                     );
                   }
@@ -138,8 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
               MaterialPageRoute(
                   builder: (context) => const NoteEditorScreen()));
         },
-        label: const Text("Add Note"),
-        icon: const Icon(Icons.add),
+        label: const Text("Add Note", style: TextStyle(color: Colors.white)),
+        icon: const Icon(Icons.add, color: Colors.white,),
         backgroundColor: myContants.secondaryColor,
       ),
     );
@@ -157,11 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onSearchTextChanged(String searchText) {
     setState(() {
-      notes
-          .where((note) =>
-              note.toLowerCase().contains(searchText.toLowerCase()) ||
-              note.toLowerCase().contains(searchText.toLowerCase()))
-          .toList();
+      searchText = searchText.toLowerCase();
     });
   }
 }

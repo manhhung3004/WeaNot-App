@@ -49,6 +49,8 @@ void showValidationMessage(String message) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+      ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -57,21 +59,22 @@ void showValidationMessage(String message) {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
-              Text(
-                'Get on board!',
+              const SizedBox(height: 10),
+              const Text(
+                'Create Account',
                 style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 20,
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold
                 ),
                 textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 10),
               Text(
-                'Create your profile to start',
+                'It free and easy to set up!',
                 style: TextStyle(
                   color: Colors.grey[700],
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
               const SizedBox(height: 25),

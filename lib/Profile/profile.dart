@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +17,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
   Constants myContants = Constants();
-
   String name = "";
   String phone = "";
   String email = "";
@@ -59,7 +57,6 @@ class _ProfileState extends State<Profile> {
                     DocumentSnapshot randomDoc =
                         snapshot.data!.docs[randomIndex];
                     Object? userData = randomDoc.data();
-
                     if (userData != null) {
                       Map<String, dynamic> userDataMap =
                           userData as Map<String, dynamic>;
@@ -93,20 +90,23 @@ class _ProfileState extends State<Profile> {
                           const SizedBox(
                             height: 30,
                           ),
-                          itemProfile("Name", name, CupertinoIcons.person),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          itemProfile("Phone", phone, CupertinoIcons.phone),
+                          itemProfile(
+                              "Name", name, CupertinoIcons.person, image),
                           const SizedBox(
                             height: 20,
                           ),
                           itemProfile(
-                              "Address", address, CupertinoIcons.location),
+                              "Phone", phone, CupertinoIcons.phone, image),
                           const SizedBox(
                             height: 20,
                           ),
-                          itemProfile("Email", email, CupertinoIcons.mail),
+                          itemProfile("Address", address,
+                              CupertinoIcons.location, image),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          itemProfile(
+                              "Email", email, CupertinoIcons.mail, image),
                           const SizedBox(
                             height: 20,
                           ),
@@ -135,7 +135,6 @@ class _ProfileState extends State<Profile> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (context) => const LoginPage()),
-                                  // (route) => false,
                                 );
                               },
                               child: const Text('Yes')),
@@ -156,7 +155,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  itemProfile(String title, subtitle, IconData icondata) {
+  itemProfile(String title, subtitle, IconData icondata, String image) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -174,18 +173,21 @@ class _ProfileState extends State<Profile> {
         leading: Icon(icondata),
         trailing: GestureDetector(
           onTap: () {
-            if( image == "assets/profile.png"){
+            if (image == "assets/profile.png") {
               image = "";
             }
-            Navigator.push(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => EditProfile(
-                      Name: name,
-                      Email: email,
-                      Phone: phone,
-                      Address: address,
-                      ImageGet: image)),
+                builder: (context) => EditProfile(
+                  Name: name,
+                  Email: email,
+                  Phone: phone,
+                  Address: address,
+                  ImageGet: image,
+                ),
+              ),
+              (route) => true,
             );
           },
           child: const Icon(Icons.arrow_forward, color: Colors.grey),
@@ -210,7 +212,6 @@ class _ProfileState extends State<Profile> {
       DocumentSnapshot randomDoc = querySnapshot.docs[randomIndex];
       // print(randomDoc.data());
       Object? userData = randomDoc.data();
-
       if (userData != null) {
         // Ép kiểu thành Map<String, dynamic>
         Map<String, dynamic> userDataMap = userData as Map<String, dynamic>;
@@ -224,10 +225,6 @@ class _ProfileState extends State<Profile> {
         } else {
           image = userDataMap["image"];
         }
-        // print(name);
-        // print(phone);
-        // print(email);
-        // print(address);
       } else {
         // print("Dữ liệu người dùng không tồn tại.");
       }

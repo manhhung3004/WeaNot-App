@@ -87,7 +87,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                         ),
                       ),
                       const SizedBox(
-                        height: 12,
+                        height: 20,
                       ),
                       Text(
                         'Please fit form below!!!!',

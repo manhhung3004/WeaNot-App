@@ -13,7 +13,6 @@ class button_editprofile extends StatelessWidget {
       onTap: (){
         onTap();
     },
-
       child: Container(
         padding: const EdgeInsets.all(25),
         margin: const EdgeInsets.symmetric(horizontal: 25),
@@ -28,7 +27,6 @@ class button_editprofile extends StatelessWidget {
               ),
             )
         ),
-
       ),
     );
   }

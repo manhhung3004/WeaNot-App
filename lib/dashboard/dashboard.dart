@@ -10,10 +10,11 @@ class Dashboard extends StatefulWidget {
   @override
   State<Dashboard> createState() => _Dashboard();
 }
+
 class _Dashboard extends State<Dashboard> {
   Constants myContants = Constants();
   // ignore: prefer_typing_uninitialized_variables
-  var height, width ;
+  var height, width;
   List imgData = [
     "assets/weather-app.png",
     "assets/take-note.png",
@@ -28,7 +29,7 @@ class _Dashboard extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
-    width= MediaQuery.of(context).size.width;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -43,49 +44,55 @@ class _Dashboard extends State<Dashboard> {
                 ),
                 height: height * 0.25,
                 width: width,
-                margin:const EdgeInsets.all(15),
+                margin: const EdgeInsets.all(15),
                 child: Column(
                   children: [
                     Padding(
-                      padding : const EdgeInsets.only( top: 40, left: 15, right: 15),
+                      padding:
+                          const EdgeInsets.only(top: 40, left: 15, right: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Profile()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const Profile()));
                             },
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                              image: const DecorationImage(image: AssetImage("assets/profile.png")),
+                            child: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.person),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Profile()));
+                                },
+                              ),
                             ),
-                          )),
+                          ),
                         ],
                       ),
                     ),
                     const Padding(
-                      padding : EdgeInsets.only( top: 20, left: 15, right: 15),
+                      padding: EdgeInsets.only(top: 20, left: 15, right: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "Dashboard",
                             style: TextStyle(
-                              fontSize: 30,color: Colors.white,
+                              fontSize: 30,
+                              color: Colors.white,
                               fontWeight: FontWeight.w500,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                          // SizedBox( height: 10,),
-                          Text(
-                            "Last Update: .../.../...",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white54,
                               letterSpacing: 1,
                             ),
                           ),
@@ -97,63 +104,82 @@ class _Dashboard extends State<Dashboard> {
               ),
               SingleChildScrollView(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    )
-                  ),
-                  height: height * 0.8,
-                  width: width,
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.1,
-                      mainAxisSpacing: 25,
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                        )),
+                    height: height * 0.8,
+                    width: width,
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.1,
+                        mainAxisSpacing: 25,
                       ),
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: imgData.length,
-                    itemBuilder: (context,index){
-                      return InkWell(
-                        onTap: () {
-                          switch(titles[index]){
-                            case "Note": Navigator.push(context, MaterialPageRoute(builder: (context) =>   const HomeScreen()));
-                            case "Weather": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Welcome()));
-                            case "Schedule": Navigator.push(context, MaterialPageRoute(builder: (context) =>  const LoadDataFromFireStore() ));
-                          }
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 20,),
-                          decoration: BoxDecoration(
-                            color: myContants.secondaryColor,
-                            boxShadow: const[
-                              BoxShadow(
-                                color:  Colors.black26,
-                                spreadRadius: 1,
-                                blurRadius: 6,
-                              )
-                            ]
-                          ),
-                          child : Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Image.asset(imgData[index], width: 100,),
-                              Text(titles[index],
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
-                              ),)
-                            ],
-                          )
-                        ),
-                      );
-                    },
-                  )
-                ),
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: imgData.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            switch (titles[index]) {
+                              case "Note":
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const HomeScreen()));
+                              case "Weather":
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const Welcome()));
+                              case "Schedule":
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoadDataFromFireStore()));
+                            }
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 20,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: myContants.secondaryColor,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black26,
+                                      spreadRadius: 1,
+                                      blurRadius: 6,
+                                    )
+                                  ]),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Image.asset(
+                                    imgData[index],
+                                    width: 100,
+                                  ),
+                                  Text(
+                                    titles[index],
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  )
+                                ],
+                              )),
+                        );
+                      },
+                    )),
               )
             ],
           ),
@@ -161,7 +187,9 @@ class _Dashboard extends State<Dashboard> {
       ),
     );
   }
-  void tranferPage(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) =>  const Profile()));
+
+  void tranferPage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const Profile()));
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,11 +13,9 @@ class Profile extends StatefulWidget {
   @override
   State<Profile> createState() => _ProfileState();
 }
-
 class _ProfileState extends State<Profile> {
   String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
   Constants myContants = Constants();
-
   String name = "";
   String phone = "";
   String email = "";
@@ -26,10 +23,19 @@ class _ProfileState extends State<Profile> {
   String image = "";
   @override
   void initState() {
+    //resetProfileData();
     Get_Random_User_With_Matching_Email(userMail!);
     super.initState();
   }
-
+//   void resetProfileData() {
+//   setState(() {
+//     name = "";
+//     phone = "";
+//     email = "";
+//     address = "";
+//     image = "";
+//   });
+// }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +65,6 @@ class _ProfileState extends State<Profile> {
                     DocumentSnapshot randomDoc =
                         snapshot.data!.docs[randomIndex];
                     Object? userData = randomDoc.data();
-
                     if (userData != null) {
                       Map<String, dynamic> userDataMap =
                           userData as Map<String, dynamic>;
@@ -93,20 +98,20 @@ class _ProfileState extends State<Profile> {
                           const SizedBox(
                             height: 30,
                           ),
-                          itemProfile("Name", name, CupertinoIcons.person),
+                          itemProfile("Name", name, CupertinoIcons.person,image),
                           const SizedBox(
                             height: 20,
                           ),
-                          itemProfile("Phone", phone, CupertinoIcons.phone),
+                          itemProfile("Phone", phone, CupertinoIcons.phone,image),
                           const SizedBox(
                             height: 20,
                           ),
                           itemProfile(
-                              "Address", address, CupertinoIcons.location),
+                              "Address", address, CupertinoIcons.location,image),
                           const SizedBox(
                             height: 20,
                           ),
-                          itemProfile("Email", email, CupertinoIcons.mail),
+                          itemProfile("Email", email, CupertinoIcons.mail,image),
                           const SizedBox(
                             height: 20,
                           ),
@@ -156,7 +161,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  itemProfile(String title, subtitle, IconData icondata) {
+  itemProfile(String title, subtitle, IconData icondata,String image) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -198,7 +203,6 @@ class _ProfileState extends State<Profile> {
   _dismissDialog() {
     Navigator.pop(context);
   }
-
   // ignore: non_constant_identifier_names
   void Get_Random_User_With_Matching_Email(String userMail) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -210,7 +214,6 @@ class _ProfileState extends State<Profile> {
       DocumentSnapshot randomDoc = querySnapshot.docs[randomIndex];
       // print(randomDoc.data());
       Object? userData = randomDoc.data();
-
       if (userData != null) {
         // Ép kiểu thành Map<String, dynamic>
         Map<String, dynamic> userDataMap = userData as Map<String, dynamic>;
@@ -224,10 +227,6 @@ class _ProfileState extends State<Profile> {
         } else {
           image = userDataMap["image"];
         }
-        // print(name);
-        // print(phone);
-        // print(email);
-        // print(address);
       } else {
         // print("Dữ liệu người dùng không tồn tại.");
       }

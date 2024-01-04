@@ -1,15 +1,17 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class EventViewPage extends StatefulWidget {
   final List<dynamic>? event;
   List<dynamic> deletedEvents = [];
 
   EventViewPage({
-    Key? key,
+    super.key,
     required this.event,
-  }) : super(key: key);
+  });
 
   @override
   EventViewPageState createState() => EventViewPageState();
@@ -18,6 +20,7 @@ class EventViewPage extends StatefulWidget {
 class EventViewPageState extends State<EventViewPage> {
   late TextEditingController fromController;
   late TextEditingController toController;
+  late TextEditingController nameController;
   late dynamic eventItem;
   late int selectedIndex;
 
@@ -26,6 +29,8 @@ class EventViewPageState extends State<EventViewPage> {
     super.initState();
     selectedIndex = 0;
     eventItem = widget.event![selectedIndex];
+    nameController =
+        TextEditingController(text: eventItem.eventName.toString());
     fromController = TextEditingController(text: eventItem.from.toString());
     toController = TextEditingController(text: eventItem.to.toString());
   }
@@ -34,6 +39,7 @@ class EventViewPageState extends State<EventViewPage> {
   void dispose() {
     fromController.dispose();
     toController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 
@@ -52,10 +58,10 @@ class EventViewPageState extends State<EventViewPage> {
     // Update the event object with the new values
     setState(() {
       eventItem.background = eventItem.background;
+      eventItem.eventName = nameController.text;
       eventItem.from = DateTime.parse(fromController.text);
       eventItem.to = DateTime.parse(toController.text);
     });
-
     // Update the event data in Firestore
     DocumentReference docRef = FirebaseFirestore.instance
         .collection("CalendarAppointmentCollection")
@@ -146,8 +152,8 @@ class EventViewPageState extends State<EventViewPage> {
               itemCount: widget.event!.length,
               itemBuilder: (BuildContext context, int index) {
                 eventItem = widget.event![index];
-                final String background = eventItem.background.toString();
                 return Card(
+                  color: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -155,17 +161,11 @@ class EventViewPageState extends State<EventViewPage> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(widget.event![index].eventName.toString()),
                         TextField(
-                          controller:TextEditingController(text: background),
-                          onChanged: (newBackground) {
-                            // Update the event object with the new background
-                            setState(() {
-                              eventItem.background = Color(int.parse(newBackground));
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            labelText: 'Background',
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Task',
+                            hintText: eventItem.eventName.toString(),
                           ),
                         ),
                         TextField(
@@ -200,13 +200,45 @@ class EventViewPageState extends State<EventViewPage> {
             children: [
               ElevatedButton(
                 onPressed: saveChanges,
-                child: const Text('Save'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Màu nền của button
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(10), // Đặt bo tròn cho button
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ), // Phong cách chữ của button
+                  ),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('Cancel'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey, // Màu nền của button
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(10), // Đặt bo tròn cho button
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

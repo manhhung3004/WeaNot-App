@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weather_app/Profile/button_editProfile.dart';
-import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -65,8 +64,6 @@ class _SignUpState extends State<EditProfile> {
 
   @override
   void initState() {
-    super.initState();
-    super.initState();
     _emailController.text = widget.Email;
     _nameController.text = widget.Name;
     _phoneController.text = widget.Phone;
@@ -76,7 +73,7 @@ class _SignUpState extends State<EditProfile> {
     } else {
       Image_get_now = widget.ImageGet;
     }
-   // print("this images right now: " + Image_get_now);
+    super.initState();
   }
 
   selectImages(ImageSource source) async {
@@ -85,10 +82,7 @@ class _SignUpState extends State<EditProfile> {
     if (file != null) {
       return await file?.readAsBytes();
     }
-    // ignore: avoid_print
-    print("No images to selected");
   }
-
   void selectimages() async {
     Uint8List image = await selectImages(ImageSource.gallery);
     setState(() {
@@ -213,7 +207,6 @@ class _SignUpState extends State<EditProfile> {
     // Gọi hàm để cập nhật dữ liệu lên Firestore
     try {
       await updateUserData(userMail, updatedData);
-      // Thông báo cập nhật thành công
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -221,13 +214,13 @@ class _SignUpState extends State<EditProfile> {
           backgroundColor: Colors.green,
         ),
       );
-      //Navigator.of(context).pop();
+      Navigator.of(context).pop();
       // ignore: use_build_context_synchronously
-      await Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const Profile()),
-        (Route<dynamic> route) => route.settings.name != '/profile',
-      );
+      // await Navigator.pushAndRemoveUntil(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const Profile()),
+      //   (Route<dynamic> route) => route.settings.name != '/profile',
+      // );
     } catch (error) {
       // Thông báo lỗi cập nhật nếu có
       // ignore: use_build_context_synchronously
@@ -264,25 +257,22 @@ class _SignUpState extends State<EditProfile> {
 
       if (imageURL.isEmpty) {
         // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("plesse upload an images"),
-        ));
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        //   content: Text("plesse upload an images"),
+        // ));
       } else {
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
             .collection("user")
             .where("username", isEqualTo: userMail)
             .get();
-
         if (querySnapshot.docs.isNotEmpty) {
           DocumentSnapshot randomDoc =
               querySnapshot.docs[0]; // Cập nhật tài liệu đầu tiên
-
           // Cập nhật các giá trị từ controllers
           updatedData["name"] = _nameController.text;
           updatedData["phone"] = _phoneController.text;
           updatedData["address"] = _addressController.text;
           updatedData['image'] = imageURL;
-
           await randomDoc.reference.update(updatedData);
           // print("Đã cập nhật dữ liệu thành công!");
         } else {

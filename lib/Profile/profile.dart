@@ -13,6 +13,7 @@ class Profile extends StatefulWidget {
   @override
   State<Profile> createState() => _ProfileState();
 }
+
 class _ProfileState extends State<Profile> {
   String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
   Constants myContants = Constants();
@@ -23,19 +24,10 @@ class _ProfileState extends State<Profile> {
   String image = "";
   @override
   void initState() {
-    //resetProfileData();
     Get_Random_User_With_Matching_Email(userMail!);
     super.initState();
   }
-//   void resetProfileData() {
-//   setState(() {
-//     name = "";
-//     phone = "";
-//     email = "";
-//     address = "";
-//     image = "";
-//   });
-// }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,20 +90,23 @@ class _ProfileState extends State<Profile> {
                           const SizedBox(
                             height: 30,
                           ),
-                          itemProfile("Name", name, CupertinoIcons.person,image),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          itemProfile("Phone", phone, CupertinoIcons.phone,image),
+                          itemProfile(
+                              "Name", name, CupertinoIcons.person, image),
                           const SizedBox(
                             height: 20,
                           ),
                           itemProfile(
-                              "Address", address, CupertinoIcons.location,image),
+                              "Phone", phone, CupertinoIcons.phone, image),
                           const SizedBox(
                             height: 20,
                           ),
-                          itemProfile("Email", email, CupertinoIcons.mail,image),
+                          itemProfile("Address", address,
+                              CupertinoIcons.location, image),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          itemProfile(
+                              "Email", email, CupertinoIcons.mail, image),
                           const SizedBox(
                             height: 20,
                           ),
@@ -140,7 +135,6 @@ class _ProfileState extends State<Profile> {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (context) => const LoginPage()),
-                                  // (route) => false,
                                 );
                               },
                               child: const Text('Yes')),
@@ -161,7 +155,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  itemProfile(String title, subtitle, IconData icondata,String image) {
+  itemProfile(String title, subtitle, IconData icondata, String image) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -179,18 +173,21 @@ class _ProfileState extends State<Profile> {
         leading: Icon(icondata),
         trailing: GestureDetector(
           onTap: () {
-            if( image == "assets/profile.png"){
+            if (image == "assets/profile.png") {
               image = "";
             }
-            Navigator.push(
+            Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (context) => EditProfile(
-                      Name: name,
-                      Email: email,
-                      Phone: phone,
-                      Address: address,
-                      ImageGet: image)),
+                builder: (context) => EditProfile(
+                  Name: name,
+                  Email: email,
+                  Phone: phone,
+                  Address: address,
+                  ImageGet: image,
+                ),
+              ),
+              (route) => true,
             );
           },
           child: const Icon(Icons.arrow_forward, color: Colors.grey),
@@ -203,6 +200,7 @@ class _ProfileState extends State<Profile> {
   _dismissDialog() {
     Navigator.pop(context);
   }
+
   // ignore: non_constant_identifier_names
   void Get_Random_User_With_Matching_Email(String userMail) async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance

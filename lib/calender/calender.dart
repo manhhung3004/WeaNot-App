@@ -51,7 +51,7 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
           Meeting app = Meeting.fromFireBaseSnapShotData(
               element, _colorCollection[random.nextInt(9)]);
           setState(() {
-            events!.appointments!.add(app);
+            events!.appointments?.add(app);
             events!.notifyListeners(CalendarDataSourceAction.add, [app]);
           });
         } else if (element.type == DocumentChangeType.modified) {
@@ -167,58 +167,57 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
             ),
           ),
           Expanded(
-  child: SfCalendar(
-    view: CalendarView.month,
-    controller: calendarController,
-    initialDisplayDate: DateTime.now(),
-    selectionDecoration: BoxDecoration(
-      border: Border.all(color:const Color.fromARGB(255, 133, 166, 194)),
-      borderRadius: BorderRadius.circular(4),
-      shape: BoxShape.rectangle,
-    ),
-    dataSource: events,
-    monthViewSettings: const MonthViewSettings(
-      appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-      showAgenda: true,
-    ),
-    blackoutDates: [
-      DateTime.now().subtract(const Duration(hours: 48)),
-      DateTime.now().subtract(const Duration(hours: 24)),
-    ],
-    appointmentBuilder: appointmentBuilder,
-    onTap: (details) {
-      setState(() {
-        _tapCount++;
-        if (_tapCount == 2) {
-          if (details.appointments == null) return;
-          final event = details.appointments!;
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => EventViewPage(event: event),
-          ));
-          _tapCount = 0;
-        } else {
-          Timer(const Duration(milliseconds: 150),
-              () => setState(() => _tapCount = 0));
-        }
-      });
-    },
-    backgroundColor: Colors.white,
-    cellBorderColor: Colors.grey,
-    todayHighlightColor: Colors.blue,
-    headerStyle: const CalendarHeaderStyle(
-      textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    ),
-  ),
-),
+            child: SfCalendar(
+              view: CalendarView.month,
+              controller: calendarController,
+              initialDisplayDate: DateTime.now(),
+              selectionDecoration: BoxDecoration(
+                border:
+                    Border.all(color: const Color.fromARGB(255, 133, 166, 194)),
+                borderRadius: BorderRadius.circular(4),
+                shape: BoxShape.rectangle,
+              ),
+              dataSource: events,
+              monthViewSettings: const MonthViewSettings(
+                appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+                showAgenda: true,
+              ),
+              blackoutDates: [
+                DateTime.now().subtract(const Duration(hours: 48)),
+                DateTime.now().subtract(const Duration(hours: 24)),
+              ],
+              appointmentBuilder: appointmentBuilder,
+              onTap: (details) {
+                setState(() {
+                  _tapCount++;
+                  if (_tapCount == 2) {
+                    if (details.appointments == null) return;
+                    final event = details.appointments!;
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EventViewPage(event: event),
+                    ));
+                    _tapCount = 0;
+                  } else {
+                    Timer(const Duration(milliseconds: 150),
+                        () => setState(() => _tapCount = 0));
+                  }
+                });
+              },
+              backgroundColor: Colors.white,
+              cellBorderColor: Colors.grey,
+              todayHighlightColor: Colors.blue,
+              headerStyle: const CalendarHeaderStyle(
+                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget appointmentBuilder(
-    BuildContext context,
-    CalendarAppointmentDetails details,
-  ) {
+  Widget appointmentBuilder(BuildContext context,CalendarAppointmentDetails details,)
+  {
     final event = details.appointments.first;
     final random = Random();
     final color = _colorCollection[random.nextInt(_colorCollection.length)];
@@ -231,7 +230,7 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Expanded(
             child: Text(
@@ -303,107 +302,144 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
   DateTime selectedStart = DateTime.now();
   DateTime selectedEnd = DateTime.now();
   TextEditingController _eventNameController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-  contentPadding: EdgeInsets.zero,
-  content: SingleChildScrollView(
-    child: Container(
-      padding: const EdgeInsets.all(20),
-      height: 300,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Center(
-            child: Text(
-              'Add Task',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+      contentPadding: EdgeInsets.zero,
+      content: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          height: 300,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Center(
+                child: Text(
+                  'Add Task',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const Text(
-            'Task Name',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          TextField(
-            controller: _eventNameController,
-            decoration: const InputDecoration(
-              hintText: 'Enter task name',
-            ),
-          ),
-          const Text(
-            'Start Time',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          CupertinoButton(
-            child: Text(
-              '${selectedStart.day}/${selectedStart.month}/${selectedStart.year} - ${selectedStart.hour}:${selectedStart.minute}:${selectedStart.second}',
-              style: const TextStyle(
-                color: Colors.blue,
-                fontSize: 16,
+              const Text(
+                'Task Name',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            onPressed: () async {
-              // ...
-            },
-          ),
-          const Text(
-            'End Time',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-          CupertinoButton(
-            child: Text(
-              '${selectedEnd.day}/${selectedEnd.month}/${selectedEnd.year} - ${selectedEnd.hour}:${selectedEnd.minute}:${selectedEnd.second}',
-              style: const TextStyle(
-                color: Colors.blue,
-                fontSize: 16,
+              TextField(
+                controller: _eventNameController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter task name',
+                ),
               ),
-            ),
-            onPressed: () async {
-              // ...
-            },
+              const Text(
+                'Start Time',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              CupertinoButton(
+                child: Text(
+                  '${selectedStart.day}/${selectedStart.month}/${selectedStart.year} - ${selectedStart.hour}:${selectedStart.minute}:${selectedStart.second}',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+                onPressed: () async {
+                  final newTime = await showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        backgroundColor: Colors.white,
+                        initialDateTime: selectedStart,
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          setState(() {
+                            selectedStart = newDateTime;
+                          });
+                        },
+                        use24hFormat: true,
+                        mode: CupertinoDatePickerMode.dateAndTime,
+                      ),
+                    ),
+                  );
+                  if (newTime != null) {
+                    setState(() {
+                      selectedStart = newTime;
+                    });
+                  }
+                },
+              ),
+              const Text(
+                'End Time',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              CupertinoButton(
+                child: Text(
+                  '${selectedEnd.day}/${selectedEnd.month}/${selectedEnd.year} - ${selectedEnd.hour}:${selectedEnd.minute}:${selectedEnd.second}',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                ),
+                onPressed: () async {
+                  final newTime = await showCupertinoModalPopup(
+                    context: context,
+                    builder: (BuildContext context) => SizedBox(
+                      height: 200,
+                      child: CupertinoDatePicker(
+                        backgroundColor: Colors.white,
+                        initialDateTime: selectedEnd,
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          setState(() {
+                            selectedEnd = newDateTime;
+                          });
+                        },
+                        use24hFormat: true,
+                        mode: CupertinoDatePickerMode.dateAndTime,
+                      ),
+                    ),
+                  );
+                  if (newTime != null) {
+                    setState(() {
+                      selectedEnd = newTime;
+                    });
+                  }
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  ),
-  actions: [
-    TextButton(
-      onPressed: () => Navigator.pop(context, false),
-      child: const Text(
-        'Cancel',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.red,
         ),
       ),
-    ),
-    TextButton(
-      onPressed: () async {
-        // ...
-      },
-      child: const Text(
-        'Add',
-        style: TextStyle(
-          fontSize: 16,
-          color: Colors.blue,
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('Cancel'),
         ),
-      ),
-    ),
-  ],
-);
+        TextButton(
+          onPressed: () async {
+            DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+            String formattedDateEnd =
+                formatter.format(DateTime.parse(selectedEnd.toString()));
+            String formattedDateStart =
+                formatter.format(DateTime.parse(selectedStart.toString()));
+            await fireStoreReference
+                .collection("CalendarAppointmentCollection")
+                .doc()
+                .set({
+              'Subject': _eventNameController.text,
+              'StartTime': formattedDateStart,
+              'EndTime': formattedDateEnd,
+              'user': userMail,
+            });
+          },
+          child: const Text('Add'),
+        ),
+      ],
+    );
   }
 }
 

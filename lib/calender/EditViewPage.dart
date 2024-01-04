@@ -23,7 +23,6 @@ class EventViewPageState extends State<EventViewPage> {
   late TextEditingController nameController;
   late dynamic eventItem;
   late int selectedIndex;
-
   @override
   void initState() {
     super.initState();
@@ -120,14 +119,14 @@ class EventViewPageState extends State<EventViewPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Đóng hộp thoại
+                Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Đóng hộp thoại
-                deleteEvent(); // Gọi hàm xóa sự kiện
+                Navigator.of(context).pop();
+                deleteEvent();
               },
               child: const Text('Delete'),
             ),
@@ -142,7 +141,7 @@ class EventViewPageState extends State<EventViewPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit your task"),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue.withOpacity(0.6),
       ),
       body: Column(
         children: [
@@ -152,46 +151,70 @@ class EventViewPageState extends State<EventViewPage> {
               itemCount: widget.event!.length,
               itemBuilder: (BuildContext context, int index) {
                 eventItem = widget.event![index];
-                return Card(
-                  color: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            labelText: 'Task',
-                            hintText: eventItem.eventName.toString(),
+                return Column(children: [
+                  Center(
+                    child: Container(
+                      width: 350, // Độ rộng container
+                      height: 300, // Chiều cao container
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.blue.withOpacity(0.6), // Màu viền
+                          width: 2, // Độ dày viền
+                        ),
+                        borderRadius: BorderRadius.circular(10), // Bo tròn viền
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              labelText: 'Task',
+                              hintText: eventItem.eventName.toString(),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                            ),
                           ),
-                        ),
-                        TextField(
-                          controller: fromController,
-                          decoration: InputDecoration(
-                            labelText: 'From',
-                            hintText: eventItem.from.toString(),
+                          TextField(
+                            controller: fromController,
+                            decoration: InputDecoration(
+                              labelText: 'From',
+                              hintText: eventItem.from.toString(),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                            ),
                           ),
-                        ),
-                        TextField(
-                          controller: toController,
-                          decoration: InputDecoration(
-                            labelText: 'To',
-                            hintText: eventItem.to.toString(),
+                          TextField(
+                            controller: toController,
+                            decoration: InputDecoration(
+                              labelText: 'To',
+                              hintText: eventItem.to.toString(),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                            ),
                           ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            showDeleteConfirmationDialog(context);
-                          },
-                          child: const Text('Delete'),
-                        ),
-                      ],
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              showDeleteConfirmationDialog(context);
+                            },
+                            child: const Text(
+                              'Delete',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                );
+                ]);
               },
             ),
           ),
@@ -200,21 +223,14 @@ class EventViewPageState extends State<EventViewPage> {
             children: [
               ElevatedButton(
                 onPressed: saveChanges,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Màu nền của button
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(10), // Đặt bo tròn cho button
-                  ),
-                ),
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     'Save',
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ), // Phong cách chữ của button
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue), // Phong cách chữ của button
                   ),
                 ),
               ),
@@ -222,21 +238,14 @@ class EventViewPageState extends State<EventViewPage> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey, // Màu nền của button
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(10), // Đặt bo tròn cho button
-                  ),
-                ),
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     'Cancel',
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
                   ),
                 ),
               ),

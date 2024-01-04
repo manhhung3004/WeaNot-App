@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, non_constant_identifier_names
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,34 +8,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:weather_app/Profile/button_editProfile.dart';
+import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class EditProfile extends StatefulWidget {
-  // const EditProfile({super.key});
-  // ignore: non_constant_identifier_names
   final String Name;
-  // ignore: non_constant_identifier_names
   final String Phone;
-  // ignore: non_constant_identifier_names
   final String Email;
-  // ignore: non_constant_identifier_names
   final String Address;
-  // ignore: non_constant_identifier_names
   final String ImageGet;
 
   const EditProfile(
       {super.key,
-      // ignore: non_constant_identifier_names
       required this.Name,
-      // ignore: non_constant_identifier_names
       required this.Phone,
-      // ignore: non_constant_identifier_names
       required this.Address,
-      // ignore: non_constant_identifier_names
       required this.Email,
-      // ignore: non_constant_identifier_names
       required this.ImageGet});
   @override
   State<EditProfile> createState() => _SignUpState();
@@ -52,7 +44,6 @@ class _SignUpState extends State<EditProfile> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  // ignore: non_constant_identifier_names
   String Image_get_now = "";
 
   @override
@@ -64,6 +55,8 @@ class _SignUpState extends State<EditProfile> {
 
   @override
   void initState() {
+    super.initState();
+    super.initState();
     _emailController.text = widget.Email;
     _nameController.text = widget.Name;
     _phoneController.text = widget.Phone;
@@ -73,7 +66,6 @@ class _SignUpState extends State<EditProfile> {
     } else {
       Image_get_now = widget.ImageGet;
     }
-    super.initState();
   }
 
   selectImages(ImageSource source) async {
@@ -82,7 +74,9 @@ class _SignUpState extends State<EditProfile> {
     if (file != null) {
       return await file?.readAsBytes();
     }
+    print("No images to selected");
   }
+
   void selectimages() async {
     Uint8List image = await selectImages(ImageSource.gallery);
     setState(() {
@@ -95,9 +89,19 @@ class _SignUpState extends State<EditProfile> {
     Constants myContants = Constants();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: myContants.primaryColor,
-        title: const Text("Your Profile"),
-      ),
+        automaticallyImplyLeading: false,
+  title: const Text('Your App'),
+  actions: <Widget>[
+    IconButton(
+      icon:const Icon(Icons.back_hand),
+      onPressed: () {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const Profile(),
+        ));
+      },
+    ),
+  ],
+),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -183,7 +187,6 @@ class _SignUpState extends State<EditProfile> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const SizedBox(height: 10),
                 button_editprofile(onTap: _editprofile),
                 const SizedBox(height: 30),
               ],
@@ -197,7 +200,6 @@ class _SignUpState extends State<EditProfile> {
   void _editprofile() async {
     // Lấy email của người dùng hiện tại
     String userMail = FirebaseAuth.instance.currentUser!.email.toString();
-
     // Tạo đối tượng Map chứa các giá trị cần cập nhật
     Map<String, dynamic> updatedData = {
       "name": _nameController.text,
@@ -207,23 +209,18 @@ class _SignUpState extends State<EditProfile> {
     // Gọi hàm để cập nhật dữ liệu lên Firestore
     try {
       await updateUserData(userMail, updatedData);
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Cập nhật thông tin thành công!"),
           backgroundColor: Colors.green,
         ),
       );
-      Navigator.of(context).pop();
-      // ignore: use_build_context_synchronously
-      // await Navigator.pushAndRemoveUntil(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const Profile()),
-      //   (Route<dynamic> route) => route.settings.name != '/profile',
-      // );
+      await Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const Profile()),
+        (Route<dynamic> route) => route.settings.name != '/profile',
+      );
     } catch (error) {
-      // Thông báo lỗi cập nhật nếu có
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Lỗi cập nhật thông tin: $error"),
@@ -232,55 +229,38 @@ class _SignUpState extends State<EditProfile> {
       );
     }
   }
-
   Future<void> updateUserData(
       String userMail, Map<String, dynamic> updatedData) async {
-    try {
-      if (file != null) {
-        String uniqueFileName =
-            DateTime.now().microsecondsSinceEpoch.toString();
-        // ignore: non_constant_identifier_names
-        Reference ReferenceRoof = FirebaseStorage.instance.ref();
-        // ignore: non_constant_identifier_names
-        Reference ReferenceDirImages = ReferenceRoof.child('images');
-        //
-        Reference referenceToUpLoad = ReferenceDirImages.child(uniqueFileName);
-        try {
-          await referenceToUpLoad.putFile(File(file!.path));
-          imageURL = await referenceToUpLoad.getDownloadURL();
-        } catch (error) {
-          if (kDebugMode) {
-            print(error);
-          }
+    if (file != null) {
+      String uniqueFileName = DateTime.now().microsecondsSinceEpoch.toString();
+      Reference ReferenceRoof = FirebaseStorage.instance.ref();
+      Reference ReferenceDirImages = ReferenceRoof.child('images');
+      Reference referenceToUpLoad = ReferenceDirImages.child(uniqueFileName);
+      try {
+        await referenceToUpLoad.putFile(File(file!.path));
+        imageURL = await referenceToUpLoad.getDownloadURL();
+      } catch (error) {
+        if (kDebugMode) {
+          print(error);
         }
       }
-
-      if (imageURL.isEmpty) {
-        // ignore: use_build_context_synchronously
-        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        //   content: Text("plesse upload an images"),
-        // ));
-      } else {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection("user")
-            .where("username", isEqualTo: userMail)
-            .get();
-        if (querySnapshot.docs.isNotEmpty) {
-          DocumentSnapshot randomDoc =
-              querySnapshot.docs[0]; // Cập nhật tài liệu đầu tiên
-          // Cập nhật các giá trị từ controllers
-          updatedData["name"] = _nameController.text;
-          updatedData["phone"] = _phoneController.text;
-          updatedData["address"] = _addressController.text;
-          updatedData['image'] = imageURL;
-          await randomDoc.reference.update(updatedData);
-          // print("Đã cập nhật dữ liệu thành công!");
-        } else {
-          //print("Không tìm thấy tài liệu phù hợp để cập nhật.");
-        }
-      }
-    } catch (error) {
-      // print("Lỗi cập nhật dữ liệu: $error");
+    }
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection("user")
+        .where("username", isEqualTo: userMail)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot randomDoc =
+          querySnapshot.docs[0]; // Cập nhật tài liệu đầu tiên
+      // Cập nhật các giá trị từ controllers
+      updatedData["name"] = _nameController.text;
+      updatedData["phone"] = _phoneController.text;
+      updatedData["address"] = _addressController.text;
+      updatedData['image'] = imageURL;
+      await randomDoc.reference.update(updatedData);
+      // print("Đã cập nhật dữ liệu thành công!");
+    } else {
+      print("Không tìm thấy tài liệu phù hợp để cập nhật.");
     }
   }
 }

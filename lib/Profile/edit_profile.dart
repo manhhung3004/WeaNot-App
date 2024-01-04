@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:weather_app/Profile/button_editProfile.dart';
+import 'package:weather_app/Profile/button_editprofile.dart';
 import 'package:weather_app/Profile/profile.dart';
 import 'package:weather_app/login/text_fill.dart';
 import 'package:weather_app/models/constants.dart';
@@ -89,19 +89,26 @@ class _SignUpState extends State<EditProfile> {
     Constants myContants = Constants();
     return Scaffold(
       appBar: AppBar(
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 23,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1,
+          ),
+        ),
+        backgroundColor: myContants.primaryColor,
         automaticallyImplyLeading: false,
-  title: const Text('Your App'),
-  actions: <Widget>[
-    IconButton(
-      icon:const Icon(Icons.back_hand),
-      onPressed: () {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const Profile(),
-        ));
-      },
-    ),
-  ],
-),
+        leading: IconButton(
+          icon: const Icon(Icons.undo, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => const Profile(),
+            ));
+          },
+        ),
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -215,11 +222,6 @@ class _SignUpState extends State<EditProfile> {
           backgroundColor: Colors.green,
         ),
       );
-      await Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const Profile()),
-        (Route<dynamic> route) => route.settings.name != '/profile',
-      );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -229,6 +231,7 @@ class _SignUpState extends State<EditProfile> {
       );
     }
   }
+
   Future<void> updateUserData(
       String userMail, Map<String, dynamic> updatedData) async {
     if (file != null) {

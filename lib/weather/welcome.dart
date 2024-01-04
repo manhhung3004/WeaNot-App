@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/Note/notehome.dart';
-import 'package:weather_app/calender/Calender.dart';
 import 'package:weather_app/models/city.dart';
 import 'package:weather_app/models/constants.dart';
 import 'package:weather_app/weather/home.dart';
@@ -25,37 +23,14 @@ class _WelcometState extends State<Welcome> {
         centerTitle: true,
         backgroundColor: myConstans.secondaryColor,
         automaticallyImplyLeading: false,
-        title: Text('${selectedcities.length} selected'),
-        elevation: 0.0,
-        actions: [
-          PopupMenuButton(itemBuilder: (context) {
-            return [
-              const PopupMenuItem<int>(
-                value: 0,
-                child: Text("Weather"),
-              ),
-              const PopupMenuItem<int>(
-                value: 1,
-                child: Text("Take Note"),
-              ),
-              const PopupMenuItem<int>(
-                value: 2,
-                child: Text("Calender"),
-              ),
-            ];
-          }, onSelected: (value) {
-            if (value == 0) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Home()));
-            } else if (value == 1) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()));
-            } else if (value == 2) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoadDataFromFireStore()));
-            }
-          }),
-        ],
+        title: Text('${selectedcities.length} selected',
+        style: const TextStyle(
+            fontSize: 23,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1,
+          ),
+        ),
       ),
       body: ListView.builder(
           itemCount: cities.length,

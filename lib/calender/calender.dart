@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/calender/editViewPage.dart';
 import 'package:weather_app/models/MeetingDataSource.dart';
 import 'package:weather_app/models/Meetings.dart';
+import 'package:weather_app/models/constants.dart';
 
 class LoadDataFromFireStore extends StatefulWidget {
   const LoadDataFromFireStore({super.key});
@@ -20,6 +21,7 @@ class LoadDataFromFireStore extends StatefulWidget {
 }
 
 class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
+  Constants myContants = Constants();
   String? userMail = FirebaseAuth.instance.currentUser?.email.toString();
   final fireStoreReference = FirebaseFirestore.instance;
   int _tapCount = 0;
@@ -113,8 +115,10 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
     isInitialLoaded = true;
     return Scaffold(
       appBar: AppBar(
+        title: const Text("Calender", style: TextStyle(color: Colors.white, fontSize: 23),),
+        backgroundColor: myContants.primaryColor,
         leading: PopupMenuButton<String>(
-          icon: const Icon(Icons.add),
+          icon: const Icon(Icons.add,color: Colors.white,),
           itemBuilder: (BuildContext context) => options.map((String choice) {
             return PopupMenuItem<String>(
               value: choice,
@@ -143,16 +147,11 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
                       calendarController.view = calendarView;
                     });
                   },
-                  child: const Text("Month View"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      calendarView = CalendarView.week;
-                      calendarController.view = calendarView;
-                    });
-                  },
-                  child: const Text("Week View"),
+                  child: const Text("Month View",
+                  style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue),),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -161,53 +160,61 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
                       calendarController.view = calendarView;
                     });
                   },
-                  child: const Text("Day View"),
+                  child: const Text("Day View",
+                  style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue),),
                 ),
               ],
             ),
           ),
           Expanded(
-            child: SfCalendar(
-              view: CalendarView.month,
-              controller: calendarController,
-              initialDisplayDate: DateTime.now(),
-              selectionDecoration: BoxDecoration(
-                border:
-                    Border.all(color: const Color.fromARGB(255, 133, 166, 194)),
-                borderRadius: BorderRadius.circular(4),
-                shape: BoxShape.rectangle,
-              ),
-              dataSource: events,
-              monthViewSettings: const MonthViewSettings(
-                appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-                showAgenda: true,
-              ),
-              blackoutDates: [
-                DateTime.now().subtract(const Duration(hours: 48)),
-                DateTime.now().subtract(const Duration(hours: 24)),
-              ],
-              appointmentBuilder: appointmentBuilder,
-              onTap: (details) {
-                setState(() {
-                  _tapCount++;
-                  if (_tapCount == 2) {
-                    if (details.appointments == null) return;
-                    final event = details.appointments!;
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EventViewPage(event: event),
-                    ));
-                    _tapCount = 0;
-                  } else {
-                    Timer(const Duration(milliseconds: 150),
-                        () => setState(() => _tapCount = 0));
-                  }
-                });
-              },
-              backgroundColor: Colors.white,
-              cellBorderColor: Colors.grey,
-              todayHighlightColor: Colors.blue,
-              headerStyle: const CalendarHeaderStyle(
-                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            child: Container(
+              padding:const EdgeInsets.all(10),
+              height: 300,
+              child: SfCalendar(
+                view: CalendarView.month,
+                controller: calendarController,
+                initialDisplayDate: DateTime.now(),
+                selectionDecoration: BoxDecoration(
+                  border:
+                      Border.all(color: Colors.blue),
+                  borderRadius: BorderRadius.circular(4),
+                  shape: BoxShape.rectangle,
+                ),
+                dataSource: events,
+                monthViewSettings: const MonthViewSettings(
+                  appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+                  showAgenda: true,
+                ),
+                blackoutDates: [
+                  DateTime.now().subtract(const Duration(hours: 48)),
+                  DateTime.now().subtract(const Duration(hours: 24)),
+                ],
+                appointmentBuilder: appointmentBuilder,
+                onTap: (details) {
+                  setState(() {
+                    _tapCount++;
+                    if (_tapCount == 2) {
+                      if (details.appointments == null) return;
+                      final event = details.appointments!;
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => EventViewPage(event: event),
+                      ));
+                      _tapCount = 0;
+                    } else {
+                      Timer(const Duration(milliseconds: 150),
+                          () => setState(() => _tapCount = 0));
+                    }
+                  });
+                },
+                backgroundColor: Colors.white,
+                cellBorderColor: Colors.grey,
+                todayHighlightColor: Colors.blue,
+                headerStyle: const CalendarHeaderStyle(
+                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
@@ -222,7 +229,7 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
     final random = Random();
     final color = _colorCollection[random.nextInt(_colorCollection.length)];
     return Container(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(1),
       width: details.bounds.width,
       height: details.bounds.height,
       decoration: BoxDecoration(
@@ -238,7 +245,7 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 13,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -247,7 +254,7 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
             event.from.toString(),
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 8,
+              fontSize: 10,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -255,7 +262,7 @@ class _LoadDataFromFireStoreState extends State<LoadDataFromFireStore> {
             event.to.toString(),
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 8,
+              fontSize: 10,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -309,7 +316,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
       content: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(20),
-          height: 300,
+          height: 290,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

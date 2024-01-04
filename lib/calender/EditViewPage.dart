@@ -1,4 +1,3 @@
-// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -140,7 +139,8 @@ class EventViewPageState extends State<EventViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit your task"),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text("Edit your task", style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.blue.withOpacity(0.6),
       ),
       body: Column(
